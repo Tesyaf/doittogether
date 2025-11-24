@@ -14,7 +14,7 @@
 
     {{-- Left Section (Logo + Image) --}}
     {{-- Left Section (Logo + Tagline) --}}
-<div class="hidden md:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] relative overflow-hidden p-10">
+<div class="hidden md:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 relative overflow-hidden p-10">
 
   {{-- efek gradient lembut belakang logo --}}
   <div class="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 blur-[120px] opacity-70"></div>
@@ -39,7 +39,6 @@
 </div>
 
 
-    {{-- Right Section (Dynamic Form) --}}
     <div class="w-full md:w-1/2 p-8 md:p-10">
       @yield('content')
     </div>

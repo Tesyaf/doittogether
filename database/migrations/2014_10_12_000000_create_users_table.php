@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->string('avatar_url', 1024)->nullable()->after('name');
         });
     }
 

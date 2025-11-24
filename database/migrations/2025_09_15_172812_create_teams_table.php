@@ -5,15 +5,21 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void {
+    public function up(): void
+    {
         Schema::create('teams', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name', 150);
             $table->foreignUuid('created_by')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
             $table->text('team_code');
             $table->timestamps();
+            $table->string('icon_url', 1024)->nullable()->after('name');
+            $table->text('description')->nullable()->after('icon_url');
+            $table->string('team_code')->unique()->change();
         });
-
     }
-    public function down(): void { Schema::dropIfExists('teams'); }
+    public function down(): void
+    {
+        Schema::dropIfExists('teams');
+    }
 };
