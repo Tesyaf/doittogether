@@ -7,19 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::create('task_attachments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('task_id')->constrained('tasks')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->unsignedBigInteger('member_id');
-            $table->string('file_name', 255);
-            $table->string('file_url', 512);
+            $table->uuid('id')->primary();
+            $table->foreignUuid('task_id')->constrained('tasks')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('member_id')->references('id_member')->on('team_members')->cascadeOnDelete();
+            $table->string('file_name', 512); // untuk string terenkripsi
+            $table->string('file_url', 1024); // terenkripsi path
             $table->timestamp('created_at')->useCurrent();
-
-            $table->foreign('member_id')
-                  ->references('id_member')->on('team_members')
-                  ->cascadeOnUpdate()->cascadeOnDelete();
-
-            $table->index('task_id');
-            $table->index('member_id');
         });
     }
     public function down(): void {

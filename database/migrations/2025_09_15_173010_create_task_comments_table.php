@@ -8,19 +8,26 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('task_comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('task_id')->constrained('tasks')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->unsignedBigInteger('member_id');
-            $table->text('body');
-            $table->timestamp('created_at')->useCurrent();
 
-            $table->foreign('member_id')
+            // relasi ke tasks.id (UUID)
+            $table->foreignUuid('task_id')
+                  ->constrained('tasks')
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();
+
+            // relasi ke team_members.id_member (UUID, bukan id default)
+            $table->foreignUuid('member_id')
                   ->references('id_member')->on('team_members')
-                  ->cascadeOnUpdate()->cascadeOnDelete();
+                  ->cascadeOnUpdate()
+                  ->cascadeOnDelete();
 
-            $table->index('task_id');
-            $table->index('member_id');
+            $table->text('body');
+            $table->timestamps(); // lebih fleksibel daripada created_at saja
+
+            $table->index(['task_id', 'member_id']);
         });
     }
+
     public function down(): void {
         Schema::dropIfExists('task_comments');
     }

@@ -7,14 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::create('team_members', function (Blueprint $table) {
-            $table->bigIncrements('id_member');
-            $table->foreignId('team_id')->constrained('teams')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
+            $table->uuid('id_member')->primary();
+            $table->foreignUuid('team_id')->constrained('teams')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignUuid('user_id')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
             $table->enum('role', ['owner','member'])->default('member');
             $table->timestamp('joined_at')->useCurrent();
             $table->unique(['team_id','user_id']);
-            $table->index('team_id');
-            $table->index('user_id');
         });
     }
     public function down(): void {

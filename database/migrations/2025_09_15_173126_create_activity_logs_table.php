@@ -8,21 +8,25 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('actor_member_id');
+
+            // UUID foreign key ke team_members.id_member
+            $table->foreignUuid('actor_member_id')
+                  ->references('id_member')
+                  ->on('team_members')
+                  ->cascadeOnUpdate()
+                  ->restrictOnDelete();
+
             $table->string('action', 80);
             $table->string('entity_type', 40);
-            $table->unsignedBigInteger('entity_id');
-            $table->timestamps();
+            $table->uuid('entity_id'); // kalau entitas target (task/team) juga UUID
             $table->text('meta')->nullable();
-
-            $table->foreign('actor_member_id')
-                  ->references('id_member')->on('team_members')
-                  ->cascadeOnUpdate()->restrictOnDelete();
+            $table->timestamps();
 
             $table->index('actor_member_id');
-            $table->index(['entity_type','entity_id']);
+            $table->index(['entity_type', 'entity_id']);
         });
     }
+
     public function down(): void {
         Schema::dropIfExists('activity_logs');
     }

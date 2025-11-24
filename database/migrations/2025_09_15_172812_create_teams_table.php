@@ -7,12 +7,13 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::create('teams', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name', 150);
-            $table->foreignId('created_by')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
-            $table->string('team_code', 12)->unique();
+            $table->foreignUuid('created_by')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
+            $table->text('team_code');
             $table->timestamps();
         });
+
     }
     public function down(): void { Schema::dropIfExists('teams'); }
 };
