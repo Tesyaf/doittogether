@@ -1,0 +1,9 @@
+use App\Http\Controllers\TeamJoinController;
+
+Route::middleware('auth')->group(function () {
+    Route::get('/teams/join', [TeamJoinController::class, 'create'])
+        ->name('teams.join');
+
+    Route::post('/teams/join', [TeamJoinController::class, 'store'])
+        ->name('teams.join.store');
+});
