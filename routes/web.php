@@ -27,17 +27,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard pengguna (global)
-Route::get('/dashboard', [UserDashboardController::class, 'index'])
-    ->middleware('auth')
-    ->name('dashboard');
-
-
-
 Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 
 Route::middleware(['auth'])->group(function () {
+    // Dashboard pengguna (global)
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])
+        ->middleware('verified')
+        ->name('dashboard');
 
     // SHOW PROFILE
     Route::get('/profile', [ProfileController::class, 'show'])
@@ -55,52 +52,54 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
         ->name('profile.password');
 
-    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
-    Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
-    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
-    Route::get('/teams/switch/{id}', [TeamController::class, 'switch'])->name('teams.switch');
+    Route::middleware('verified')->group(function () {
+        Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+        Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
+        Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+        Route::get('/teams/switch/{id}', [TeamController::class, 'switch'])->name('teams.switch');
 
-    Route::get('/teams/{team}', [TeamController::class, 'dashboard'])->name('teams.dashboard');
+        Route::get('/teams/{team}', [TeamController::class, 'dashboard'])->name('teams.dashboard');
 
-    Route::get('/teams/{team}/members', [TeamController::class, 'members'])->name('teams.members');
-    Route::get('/teams/{team}/invite', [TeamController::class, 'invite'])->name('teams.invite');
-    Route::post('/teams/{team}/invite', [TeamController::class, 'sendInvite'])->name('teams.invite.store');
-    Route::get('/teams/{team}/invitations', [TeamController::class, 'pendingInvitations'])->name('teams.invitations.pending');
-    Route::post('/teams/{team}/invitations/{invitation}/resend', [TeamController::class, 'resendInvitation'])->name('teams.invitations.resend');
-    Route::delete('/teams/{team}/invitations/{invitation}', [TeamController::class, 'cancelInvitation'])->name('teams.invitations.cancel');
+        Route::get('/teams/{team}/members', [TeamController::class, 'members'])->name('teams.members');
+        Route::get('/teams/{team}/invite', [TeamController::class, 'invite'])->name('teams.invite');
+        Route::post('/teams/{team}/invite', [TeamController::class, 'sendInvite'])->name('teams.invite.store');
+        Route::get('/teams/{team}/invitations', [TeamController::class, 'pendingInvitations'])->name('teams.invitations.pending');
+        Route::post('/teams/{team}/invitations/{invitation}/resend', [TeamController::class, 'resendInvitation'])->name('teams.invitations.resend');
+        Route::delete('/teams/{team}/invitations/{invitation}', [TeamController::class, 'cancelInvitation'])->name('teams.invitations.cancel');
 
-    Route::get('/teams/{team}/activity', [TeamController::class, 'activityLog'])->name('teams.activity');
-    Route::get('/teams/{team}/notifications', [TeamController::class, 'notifications'])->name('teams.notifications');
+        Route::get('/teams/{team}/activity', [TeamController::class, 'activityLog'])->name('teams.activity');
+        Route::get('/teams/{team}/notifications', [TeamController::class, 'notifications'])->name('teams.notifications');
 
-    Route::get('/teams/{team}/settings', [TeamController::class, 'settings'])->name('teams.settings');
-    Route::put('/teams/{team}/settings', [TeamController::class, 'updateSettings'])->name('teams.settings.update');
+        Route::get('/teams/{team}/settings', [TeamController::class, 'settings'])->name('teams.settings');
+        Route::put('/teams/{team}/settings', [TeamController::class, 'updateSettings'])->name('teams.settings.update');
 
-    // TASK ROUTES (nested dalam team)
-    Route::get('/teams/{team}/tasks', [TaskController::class, 'index'])->name('tasks.index');
-    Route::get('/teams/{team}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
-    Route::post('/teams/{team}/tasks', [TaskController::class, 'store'])->name('tasks.store');
-    Route::get('/teams/{team}/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
-    Route::get('/teams/{team}/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
-    Route::put('/teams/{team}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-    Route::delete('/teams/{team}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        // TASK ROUTES (nested dalam team)
+        Route::get('/teams/{team}/tasks', [TaskController::class, 'index'])->name('tasks.index');
+        Route::get('/teams/{team}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+        Route::post('/teams/{team}/tasks', [TaskController::class, 'store'])->name('tasks.store');
+        Route::get('/teams/{team}/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+        Route::get('/teams/{team}/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+        Route::put('/teams/{team}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+        Route::delete('/teams/{team}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-    // TASK COMMENTS
-    Route::post('/teams/{team}/tasks/{task}/comments', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
+        // TASK COMMENTS
+        Route::post('/teams/{team}/tasks/{task}/comments', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
 
-    // TASK ATTACHMENTS
-    Route::post('/teams/{team}/tasks/{task}/attachments', [TaskAttachmentController::class, 'store'])->name('tasks.attachments.store');
-    Route::delete('/teams/{team}/tasks/{task}/attachments/{attachment}', [TaskAttachmentController::class, 'destroy'])->name('tasks.attachments.destroy');
+        // TASK ATTACHMENTS
+        Route::post('/teams/{team}/tasks/{task}/attachments', [TaskAttachmentController::class, 'store'])->name('tasks.attachments.store');
+        Route::delete('/teams/{team}/tasks/{task}/attachments/{attachment}', [TaskAttachmentController::class, 'destroy'])->name('tasks.attachments.destroy');
 
-    // TASK ASSIGNEES
-    Route::post('/teams/{team}/tasks/{task}/assignees', [TaskAssigneeController::class, 'store'])->name('tasks.assignees.store');
-    Route::delete('/teams/{team}/tasks/{task}/assignees/{memberId}', [TaskAssigneeController::class, 'destroy'])->name('tasks.assignees.destroy');
+        // TASK ASSIGNEES
+        Route::post('/teams/{team}/tasks/{task}/assignees', [TaskAssigneeController::class, 'store'])->name('tasks.assignees.store');
+        Route::delete('/teams/{team}/tasks/{task}/assignees/{memberId}', [TaskAssigneeController::class, 'destroy'])->name('tasks.assignees.destroy');
 
-    // CATEGORY ROUTES
-    Route::get('/teams/{team}/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/teams/{team}/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/teams/{team}/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/teams/{team}/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/teams/{team}/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+        // CATEGORY ROUTES
+        Route::get('/teams/{team}/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+        Route::post('/teams/{team}/categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/teams/{team}/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/teams/{team}/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/teams/{team}/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
 });
 
 require __DIR__ . '/auth.php';
