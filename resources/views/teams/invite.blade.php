@@ -17,11 +17,6 @@
         </div>
     </div>
 
-    @if (session('success'))
-    <div class="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">
-        {{ session('success') }}
-    </div>
-    @endif
     @if ($errors->any())
     <div class="rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm space-y-1">
         @foreach ($errors->all() as $error)
@@ -29,6 +24,10 @@
         @endforeach
     </div>
     @endif
+
+    <a href="{{ route('teams.dashboard', $team) }}" class="inline-flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-cyan-600 text-sm">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Tim
+    </a>
 
     <div class="grid gap-6 lg:grid-cols-3">
         <div class="lg:col-span-2 space-y-6">

@@ -9,12 +9,12 @@
             <h1 class="text-3xl font-semibold text-slate-900 dark:text-white">Team Dashboard</h1>
         </div>
         <div class="flex flex-wrap gap-3">
-            <button class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
+            <a href="{{ route('tasks.create', $currentTeam->id) }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
                 <i class="fa-solid fa-plus mr-2"></i> Buat Task
-            </button>
-            <button class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
+            </a>
+            <a href="{{ route('teams.invite', $currentTeam->id) }}" class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
                 <i class="fa-solid fa-user-plus mr-2"></i> Undang Anggota
-            </button>
+            </a>
         </div>
     </div>
 
@@ -143,9 +143,9 @@
                 </div>
                 @endforeach
             </div>
-            <button class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
+            <a href="{{ route('teams.members', $currentTeam->id) }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
                 Kelola anggota
-            </button>
+            </a>
         </div>
     </div>
 </div>

@@ -23,6 +23,7 @@
 
         {{-- MAIN CONTENT --}}
         <main class="flex-1 p-6 min-h-screen md:ml-80">
+            @include('layouts.partials.flash')
             @yield('content')
         </main>
 

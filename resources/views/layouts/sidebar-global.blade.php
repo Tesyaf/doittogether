@@ -13,12 +13,16 @@
     @foreach($teams as $team)
     <div class="relative group">
         <a href="{{ route('teams.switch', $team->id) }}"
-            class="w-11 h-11 rounded-2xl flex items-center justify-center 
+            class="w-11 h-11 rounded-2xl flex items-center justify-center overflow-hidden
                   text-sm font-semibold border border-white/10
                   {{ ($team->id === session('team_id') && !request()->routeIs('dashboard')) 
                        ? 'bg-cyan-500/80 text-white ring-2 ring-cyan-400' 
                        : 'bg-white/5 text-white/70 hover:bg-white/10' }}">
-            {{ strtoupper(Str::limit($team->name, 2, '')) }}
+            @if(!empty($team->icon_url))
+                <img src="{{ $team->icon_url }}" alt="{{ $team->name }}" class="w-full h-full object-cover">
+            @else
+                {{ strtoupper(\Illuminate\Support\Str::limit($team->name, 2, '')) }}
+            @endif
         </a>
 
         {{-- Tooltip nama tim --}}

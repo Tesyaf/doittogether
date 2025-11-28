@@ -17,6 +17,8 @@ class Team extends Model
         'name',
         'team_code',
         'created_by',
+        'icon_url',
+        'description',
     ];
 
     protected $casts = [

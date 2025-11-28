@@ -11,6 +11,9 @@ use App\Http\Controllers\TaskAssigneeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TeamDashboardController;
 use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\MasterTaskStatusController;
+use App\Http\Controllers\Admin\MasterTaskPriorityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +36,7 @@ Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 Route::middleware(['auth'])->group(function () {
     // Dashboard pengguna (global)
     Route::get('/dashboard', [UserDashboardController::class, 'index'])
-        ->middleware('verified')
+        ->middleware('verified_or_admin')
         ->name('dashboard');
 
     // SHOW PROFILE
@@ -52,7 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
         ->name('profile.password');
 
-    Route::middleware('verified')->group(function () {
+    Route::middleware('verified_or_admin')->group(function () {
         Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
         Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
         Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
@@ -99,6 +102,22 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/teams/{team}/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/teams/{team}/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/teams/{team}/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    });
+
+    // ADMIN PANEL (tanpa verifikasi email, hanya auth+admin)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::post('/users/{user}/toggle-admin', [UserManagementController::class, 'toggleAdmin'])->name('users.toggle');
+
+        Route::get('/master/statuses', [MasterTaskStatusController::class, 'index'])->name('master.statuses.index');
+        Route::post('/master/statuses', [MasterTaskStatusController::class, 'store'])->name('master.statuses.store');
+        Route::put('/master/statuses/{status}', [MasterTaskStatusController::class, 'update'])->name('master.statuses.update');
+        Route::delete('/master/statuses/{status}', [MasterTaskStatusController::class, 'destroy'])->name('master.statuses.destroy');
+
+        Route::get('/master/priorities', [MasterTaskPriorityController::class, 'index'])->name('master.priorities.index');
+        Route::post('/master/priorities', [MasterTaskPriorityController::class, 'store'])->name('master.priorities.store');
+        Route::put('/master/priorities/{priority}', [MasterTaskPriorityController::class, 'update'])->name('master.priorities.update');
+        Route::delete('/master/priorities/{priority}', [MasterTaskPriorityController::class, 'destroy'])->name('master.priorities.destroy');
     });
 });
 

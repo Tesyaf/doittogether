@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
@@ -32,7 +33,14 @@ class ProfileController extends Controller
                 'required', 'email',
                 Rule::unique('users')->ignore($user->id)
             ],
+            'avatar' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        // Handle avatar upload if provided
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('profile-avatars', 'public');
+            $validated['avatar_url'] = Storage::url($path);
+        }
 
         $user->update($validated);
 

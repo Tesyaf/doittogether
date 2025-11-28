@@ -23,18 +23,21 @@
         background: rgba(255, 255, 255, 0.1);
     }
 
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 0.5rem;
+    .calendar {
+        width: 100%;
     }
 
-    .calendar-day-header {
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 0.5rem;
+        justify-items: center;
+    }
+
+    .calendar-day-header,
+    .calendar-day {
+        width: 100%;
         text-align: center;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.6);
-        padding: 0.5rem;
     }
 
     .calendar-day {
@@ -235,8 +238,12 @@
                 @forelse($members as $member)
                 <div class="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40">
                     <div class="flex items-center gap-3">
-                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-semibold">
-                            {{ strtoupper(substr($member->user->name ?? 'A', 0, 2)) }}
+                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-semibold overflow-hidden">
+                            @if($member->user && $member->user->avatar_url)
+                                <img src="{{ $member->user->avatar_url }}" alt="{{ $member->user->name }}" class="w-full h-full object-cover">
+                            @else
+                                {{ strtoupper(substr($member->user->name ?? 'A', 0, 2)) }}
+                            @endif
                         </div>
                         <div>
                             <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $member->user->name }}</p>

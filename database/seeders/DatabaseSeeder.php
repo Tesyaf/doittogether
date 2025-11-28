@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
             TeamSeeder::class,
             TaskSeeder::class,
             NotificationSeeder::class,
+            AdminUserSeeder::class,
+            MasterTaskStatusSeeder::class,
+            MasterTaskPrioritySeeder::class,
         ]);
     }
 }

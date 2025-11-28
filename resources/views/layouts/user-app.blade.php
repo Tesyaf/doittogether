@@ -18,10 +18,12 @@
     @if (request()->routeIs('dashboard') || View::hasSection('userSidebar'))
     @include('layouts.sidebar-user')
     <main class="flex-1 p-6 min-h-screen md:ml-80">
+        @include('layouts.partials.flash')
         @yield('content')
     </main>
     @else
     <main class="p-6 min-h-screen md:ml-20">
+        @include('layouts.partials.flash')
         @yield('content')
     </main>
     @endif

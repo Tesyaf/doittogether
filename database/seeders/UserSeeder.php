@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
             'name' => 'Muhammad Alif Abrar',
             'email' => 'lif@example.com',
             'password' => Hash::make('password'), // bisa login pakai ini
+            'is_admin' => false,
         ]);
 
         // 5 user tambahan random

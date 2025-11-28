@@ -10,6 +10,7 @@ use App\Mail\TeamInvitationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class TeamController extends Controller
@@ -109,7 +110,9 @@ class TeamController extends Controller
     {
         $this->ensureOwnerOrAdmin($team);
         $members = $team->members()->with('user')->get();
-        return view('teams.members', compact('team', 'members'));
+        $pendingInvitations = $team->invitations()->where('status', 'pending')->get();
+        $roleStats = $members->groupBy('role')->map->count();
+        return view('teams.members', compact('team', 'members', 'pendingInvitations', 'roleStats'));
     }
 
     public function invite(Team $team)
@@ -246,8 +249,14 @@ class TeamController extends Controller
         $data = $request->validate([
             'name' => 'required|max:150',
             'description' => 'nullable|max:500',
-            'icon_url' => 'nullable|max:1024',
+            'icon_url' => 'nullable|url|max:1024',
+            'icon' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('icon')) {
+            $path = $request->file('icon')->store('team-logos', 'public');
+            $data['icon_url'] = Storage::url($path);
+        }
 
         $team->update($data);
 
@@ -272,12 +281,13 @@ class TeamController extends Controller
 
     private function ensureOwnerOrAdmin(Team $team)
     {
-        abort_unless(
-            $team->members()
-                ->where('user_id', Auth::id())
-                ->whereIn('role', ['owner', 'admin'])
-                ->exists(),
-            403
-        );
+        $isOwner = $team->members()
+            ->where('user_id', Auth::id())
+            ->where('role', 'owner')
+            ->exists();
+
+        $isAppAdmin = Auth::user()?->is_admin;
+
+        abort_unless($isOwner || $isAppAdmin, 403);
     }
 }
