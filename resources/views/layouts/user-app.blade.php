@@ -13,10 +13,18 @@
     'teams' => $teams,
     ])
 
-    <main class="p-6 min-h-screen md:ml-20">
-        {{-- Konten halaman --}}
+    {{-- Optional user sidebar: active when the view defines a `userSidebar` section
+         or when on the main user dashboard route --}}
+    @if (request()->routeIs('dashboard') || View::hasSection('userSidebar'))
+    @include('layouts.sidebar-user')
+    <main class="flex-1 p-6 min-h-screen md:ml-80">
         @yield('content')
     </main>
+    @else
+    <main class="p-6 min-h-screen md:ml-20">
+        @yield('content')
+    </main>
+    @endif
 
 </body>
 

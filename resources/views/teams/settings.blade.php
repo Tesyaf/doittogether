@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.team-app')
 
 @section('content')
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
@@ -121,9 +121,9 @@
                 </div>
                 <div class="space-y-3">
                     @foreach ([
-                        ['role' => 'Admin', 'desc' => 'Full akses, kelola anggota & billing'],
-                        ['role' => 'Editor', 'desc' => 'Kelola task dan sprint'],
-                        ['role' => 'Viewer', 'desc' => 'Hanya baca laporan'],
+                    ['role' => 'Admin', 'desc' => 'Full akses, kelola anggota & billing'],
+                    ['role' => 'Editor', 'desc' => 'Kelola task dan sprint'],
+                    ['role' => 'Viewer', 'desc' => 'Hanya baca laporan'],
                     ] as $item)
                     <div class="p-3 rounded-xl border border-slate-800 bg-slate-800/60">
                         <p class="text-sm font-semibold">{{ $item['role'] }}</p>

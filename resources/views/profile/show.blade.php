@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user-app')
 
 @section('content')
 
@@ -6,9 +6,9 @@
 
     {{-- SUCCESS MESSAGE --}}
     @if (session('success'))
-        <div class="p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-green-300">
-            {{ session('success') }}
-        </div>
+    <div class="p-4 bg-green-500/20 border border-green-500/30 rounded-xl text-green-300">
+        {{ session('success') }}
+    </div>
     @endif
 
     {{-- CARD SHOW PROFILE --}}
@@ -38,12 +38,12 @@
 
         <div class="mt-6 flex gap-3">
             <a href="{{ route('profile.edit') }}"
-               class="px-5 py-2 rounded-xl bg-cyan-500/90 hover:bg-cyan-500 transition font-semibold">
+                class="px-5 py-2 rounded-xl bg-cyan-500/90 hover:bg-cyan-500 transition font-semibold">
                 Edit Profil
             </a>
 
             <a href="{{ route('profile.edit') }}#password"
-               class="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
+                class="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 transition">
                 Ubah Password
             </a>
         </div>

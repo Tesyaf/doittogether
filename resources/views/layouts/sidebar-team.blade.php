@@ -2,11 +2,10 @@
 <aside
     x-data="{
         open_main: true,
-        open_categories: true,
         open_team: false,
         open_settings: false
     }"
-    class="w-64 bg-[#0b1120] border-r border-white/10 py-5 px-4 hidden md:flex flex-col">
+    class="w-64 bg-[#0b1120] border-r border-white/10 py-5 px-4 hidden md:flex md:fixed md:left-20 md:top-0 md:bottom-0 md:flex-col md:z-40">
 
     {{-- Header Team --}}
     <div>
@@ -27,53 +26,18 @@
 
             <div x-show="open_main" x-transition class="mt-2 space-y-1">
 
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('teams.dashboard', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl
-                           {{ request()->routeIs('dashboard') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
-                    🏠 Overview
+                           {{ request()->routeIs('teams.dashboard') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
+                    <i class="fa-solid fa-home"></i> Overview
                 </a>
 
-                <a href="{{ route('tasks.index') }}"
+                <a href="{{ route('tasks.index', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl
                            {{ request()->routeIs('tasks.*') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
-                    🗂 Semua Tugas
+                    <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
-                <a href="{{ route('tasks.my') }}"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl
-                           {{ request()->routeIs('tasks.my') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
-                    ✅ Tugas Saya
-                </a>
-
-            </div>
-        </div>
-
-        {{-- CATEGORIES --}}
-        <div>
-            <button @click="open_categories = !open_categories"
-                class="w-full flex items-center justify-between text-white/70 text-xs uppercase">
-                <span>Kategori</span><span x-text="open_categories ? '−' : '+'"></span>
-            </button>
-
-            <div x-show="open_categories" x-transition class="mt-2 space-y-1">
-
-                @forelse($categories as $category)
-                <a href="{{ route('tasks.category', $category->id) }}"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl
-                               {{ request()->routeIs('tasks.category') && request()->id == $category->id 
-                                    ? 'bg-white/10 text-white' 
-                                    : 'text-white/70 hover:bg-white/5' }}">
-                    📁 {{ $category->name }}
-                </a>
-                @empty
-                <p class="text-white/40 text-xs px-3">Belum ada kategori</p>
-                @endforelse
-
-                {{-- Tambah kategori --}}
-                <a href="{{ route('categories.create') }}"
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/50 hover:bg-white/5">
-                    ➕ Tambah Kategori
-                </a>
             </div>
         </div>
 
@@ -86,14 +50,14 @@
 
             <div x-show="open_team" x-transition class="mt-2 space-y-1">
 
-                <a href="{{ route('team.members', $currentTeam->id) }}"
+                <a href="{{ route('teams.members', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">
-                    👥 Anggota
+                    <i class="fa-solid fa-users"></i> Anggota
                 </a>
 
-                <a href="{{ route('team.invite', $currentTeam->id) }}"
+                <a href="{{ route('teams.invite', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">
-                    ✉️ Undang Anggota
+                    <i class="fa-solid fa-envelope"></i> Undang Anggota
                 </a>
 
             </div>
@@ -108,14 +72,14 @@
 
             <div x-show="open_settings" x-transition class="mt-2 space-y-1">
 
-                <a href="{{ route('team.settings', $currentTeam->id) }}"
+                <a href="{{ route('teams.settings', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">
-                    ⚙️ Pengaturan Tim
+                    <i class="fa-solid fa-gear"></i> Pengaturan Tim
                 </a>
 
                 <a href="{{ route('profile.show') }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">
-                    👤 Profil Saya
+                    <i class="fa-solid fa-user"></i> Profil Saya
                 </a>
 
             </div>

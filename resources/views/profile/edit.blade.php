@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user-app')
 
 @section('content')
 @php($user = $user ?? auth()->user())
@@ -50,8 +50,7 @@
                             value="{{ old('name', $user?->name) }}"
                             required
                             autocomplete="name"
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition"
-                        >
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
                         @error('name')
                         <p class="text-sm text-red-500">{{ $message }}</p>
                         @enderror
@@ -65,8 +64,7 @@
                             value="{{ old('email', $user?->email) }}"
                             required
                             autocomplete="username"
-                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition"
-                        >
+                            class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
                         @error('email')
                         <p class="text-sm text-red-500">{{ $message }}</p>
                         @enderror
@@ -90,8 +88,7 @@
                                     accept="image/*"
                                     class="sr-only"
                                     x-ref="avatar"
-                                    @change="const [file] = $event.target.files; if (file) { preview = URL.createObjectURL(file); }"
-                                >
+                                    @change="const [file] = $event.target.files; if (file) { preview = URL.createObjectURL(file); }">
                                 <span>Upload foto</span>
                             </label>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Format JPG/PNG maks 2MB.</p>
@@ -110,8 +107,7 @@
                     </div>
                     <button
                         type="submit"
-                        class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition"
-                    >
+                        class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
                         Simpan Perubahan
                     </button>
                 </div>
@@ -136,8 +132,7 @@
                         name="current_password"
                         type="password"
                         autocomplete="current-password"
-                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition"
-                    >
+                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition">
                     @if ($errors->updatePassword->has('current_password'))
                     <p class="text-sm text-red-400">{{ $errors->updatePassword->first('current_password') }}</p>
                     @endif
@@ -150,8 +145,7 @@
                         name="password"
                         type="password"
                         autocomplete="new-password"
-                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition"
-                    >
+                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition">
                     @if ($errors->updatePassword->has('password'))
                     <p class="text-sm text-red-400">{{ $errors->updatePassword->first('password') }}</p>
                     @endif
@@ -164,8 +158,7 @@
                         name="password_confirmation"
                         type="password"
                         autocomplete="new-password"
-                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition"
-                    >
+                        class="w-full rounded-lg border border-slate-700 bg-slate-800 px-4 py-2.5 text-slate-100 focus:ring-2 focus:ring-cyan-400 focus:border-blue-300 transition">
                     @if ($errors->updatePassword->has('password_confirmation'))
                     <p class="text-sm text-red-400">{{ $errors->updatePassword->first('password_confirmation') }}</p>
                     @endif
@@ -174,8 +167,7 @@
                 <div class="flex flex-col gap-2">
                     <button
                         type="submit"
-                        class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition"
-                    >
+                        class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
                         Perbarui Password
                     </button>
                     @if (session('status') === 'password-updated')

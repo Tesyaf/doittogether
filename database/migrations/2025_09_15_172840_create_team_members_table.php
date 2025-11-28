@@ -10,7 +10,7 @@ return new class extends Migration {
             $table->uuid('id_member')->primary();
             $table->foreignUuid('team_id')->constrained('teams')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnUpdate()->restrictOnDelete();
-            $table->enum('role', ['owner','member'])->default('member');
+            $table->enum('role', ['owner','admin','member'])->default('member');
             $table->timestamp('joined_at')->useCurrent();
             $table->unique(['team_id','user_id']);
         });

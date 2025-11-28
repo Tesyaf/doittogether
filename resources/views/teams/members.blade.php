@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.team-app')
 
 @section('content')
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
@@ -72,10 +72,10 @@
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/40">
                             @foreach ([
-                                ['name' => 'Aulia Rahma', 'email' => 'aulia@doit.id', 'role' => 'Admin', 'status' => 'Aktif'],
-                                ['name' => 'Rafi Pratama', 'email' => 'rafi@doit.id', 'role' => 'Editor', 'status' => 'Aktif'],
-                                ['name' => 'Nadya Putri', 'email' => 'nadya@doit.id', 'role' => 'Viewer', 'status' => 'Aktif'],
-                                ['name' => 'Dimas Saputra', 'email' => 'dimas@doit.id', 'role' => 'Editor', 'status' => 'Pending'],
+                            ['name' => 'Aulia Rahma', 'email' => 'aulia@doit.id', 'role' => 'Admin', 'status' => 'Aktif'],
+                            ['name' => 'Rafi Pratama', 'email' => 'rafi@doit.id', 'role' => 'Editor', 'status' => 'Aktif'],
+                            ['name' => 'Nadya Putri', 'email' => 'nadya@doit.id', 'role' => 'Viewer', 'status' => 'Aktif'],
+                            ['name' => 'Dimas Saputra', 'email' => 'dimas@doit.id', 'role' => 'Editor', 'status' => 'Pending'],
                             ] as $member)
                             <tr>
                                 <td class="px-4 py-3">
@@ -127,9 +127,9 @@
                 </div>
                 <div class="space-y-3">
                     @foreach ([
-                        ['email' => 'alex@doit.id', 'role' => 'Editor', 'sent' => '2 hari lalu'],
-                        ['email' => 'sinta@doit.id', 'role' => 'Viewer', 'sent' => 'Kemarin'],
-                        ['email' => 'bima@doit.id', 'role' => 'Viewer', 'sent' => 'Hari ini'],
+                    ['email' => 'alex@doit.id', 'role' => 'Editor', 'sent' => '2 hari lalu'],
+                    ['email' => 'sinta@doit.id', 'role' => 'Viewer', 'sent' => 'Kemarin'],
+                    ['email' => 'bima@doit.id', 'role' => 'Viewer', 'sent' => 'Hari ini'],
                     ] as $invite)
                     <div class="p-3 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 flex items-center justify-between">
                         <div>
@@ -158,9 +158,9 @@
                 </div>
                 <div class="space-y-3">
                     @foreach ([
-                        ['role' => 'Admin', 'count' => 3],
-                        ['role' => 'Editor', 'count' => 6],
-                        ['role' => 'Viewer', 'count' => 5],
+                    ['role' => 'Admin', 'count' => 3],
+                    ['role' => 'Editor', 'count' => 6],
+                    ['role' => 'Viewer', 'count' => 5],
                     ] as $role)
                     <div class="flex items-center justify-between p-3 rounded-xl border border-slate-800 bg-slate-800/60">
                         <div>

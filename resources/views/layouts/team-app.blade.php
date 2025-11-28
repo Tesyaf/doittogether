@@ -22,7 +22,7 @@
         ])
 
         {{-- MAIN CONTENT --}}
-        <main class="flex-1 p-6 min-h-screen md:ml-64">
+        <main class="flex-1 p-6 min-h-screen md:ml-80">
             @yield('content')
         </main>
 

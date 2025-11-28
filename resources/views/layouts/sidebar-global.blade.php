@@ -3,9 +3,8 @@
 
     {{-- Logo --}}
     <a href="{{ route('dashboard') }}"
-        class="w-12 h-12 rounded-2xl bg-cyan-500 flex items-center justify-center
-              font-bold text-xl shadow-lg hover:opacity-90 transition">
-        D
+        class="w-12 h-12 flex items-center justify-center shadow-lg hover:opacity-90 transition">
+        <img src="{{ asset('images/logo.svg') }}" alt="DoItTogether" class="w-8 h-8">
     </a>
 
     <div class="w-10 h-px bg-white/10 my-2"></div>
@@ -16,7 +15,7 @@
         <a href="{{ route('teams.switch', $team->id) }}"
             class="w-11 h-11 rounded-2xl flex items-center justify-center 
                   text-sm font-semibold border border-white/10
-                  {{ $team->id === session('team_id') 
+                  {{ ($team->id === session('team_id') && !request()->routeIs('dashboard')) 
                        ? 'bg-cyan-500/80 text-white ring-2 ring-cyan-400' 
                        : 'bg-white/5 text-white/70 hover:bg-white/10' }}">
             {{ strtoupper(Str::limit($team->name, 2, '')) }}

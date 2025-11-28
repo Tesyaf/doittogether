@@ -10,17 +10,19 @@ class TeamInvitation extends Model
 {
     use HasFactory, HasUuids;
 
+    public $timestamps = false;
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'team_id', 'email', 'code', 'invited_by_member', 'status', 'expires_at'
+        'team_id', 'email', 'code', 'invited_by_member', 'role', 'status', 'expires_at', 'created_at'
     ];
 
     protected $casts = [
         'email' => 'encrypted',
         'code' => 'encrypted',
         'expires_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function team()

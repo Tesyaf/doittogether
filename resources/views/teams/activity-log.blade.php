@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.team-app')
 
 @section('content')
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
@@ -80,11 +80,11 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/40">
                     @foreach ([
-                        ['name' => 'Aulia Rahma', 'action' => 'Mengubah role Dimas menjadi Editor', 'category' => 'Role', 'time' => '5 menit lalu', 'status' => 'Berhasil'],
-                        ['name' => 'Rafi Pratama', 'action' => 'Menghapus task "Integrasi Midtrans"', 'category' => 'Task', 'time' => '20 menit lalu', 'status' => 'Berhasil'],
-                        ['name' => 'Nadya Putri', 'action' => 'Meng-update logo tim', 'category' => 'Branding', 'time' => '1 jam lalu', 'status' => 'Berhasil'],
-                        ['name' => 'Dimas Saputra', 'action' => 'Percobaan login gagal 3x', 'category' => 'Keamanan', 'time' => '3 jam lalu', 'status' => 'Dipantau'],
-                        ['name' => 'System', 'action' => 'Undangan ke lisa@doit.id kadaluwarsa', 'category' => 'Undangan', 'time' => 'Kemarin', 'status' => 'Kadaluarsa'],
+                    ['name' => 'Aulia Rahma', 'action' => 'Mengubah role Dimas menjadi Editor', 'category' => 'Role', 'time' => '5 menit lalu', 'status' => 'Berhasil'],
+                    ['name' => 'Rafi Pratama', 'action' => 'Menghapus task "Integrasi Midtrans"', 'category' => 'Task', 'time' => '20 menit lalu', 'status' => 'Berhasil'],
+                    ['name' => 'Nadya Putri', 'action' => 'Meng-update logo tim', 'category' => 'Branding', 'time' => '1 jam lalu', 'status' => 'Berhasil'],
+                    ['name' => 'Dimas Saputra', 'action' => 'Percobaan login gagal 3x', 'category' => 'Keamanan', 'time' => '3 jam lalu', 'status' => 'Dipantau'],
+                    ['name' => 'System', 'action' => 'Undangan ke lisa@doit.id kadaluwarsa', 'category' => 'Undangan', 'time' => 'Kemarin', 'status' => 'Kadaluarsa'],
                     ] as $item)
                     <tr>
                         <td class="px-4 py-3">

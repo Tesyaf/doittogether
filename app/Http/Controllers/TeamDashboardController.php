@@ -8,6 +8,8 @@ class TeamDashboardController extends Controller
 {
     public function index()
     {
-        return view('team.dashboard');
+        return view('teams.dashboard', [
+            'teams' => $teams,
+        ]);
     }
 }

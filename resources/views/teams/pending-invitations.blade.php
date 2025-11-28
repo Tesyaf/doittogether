@@ -1,6 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.team-app')
 
 @section('content')
+@php
+    $pending = $invitations;
+    $expiringSoon = $pending->filter(fn ($invite) => $invite->expires_at && $invite->expires_at->lte(now()->addDays(3)));
+    $sentToday = $pending->filter(fn ($invite) => optional($invite->created_at)->isToday());
+@endphp
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -8,34 +13,44 @@
             <h1 class="text-3xl font-semibold text-slate-900 dark:text-white">Pending Invitations</h1>
         </div>
         <div class="flex flex-wrap gap-3">
-            <button class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
+            <a href="{{ route('teams.invite', $team) }}" class="inline-flex items-center px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:border-cyan-500 hover:text-cyan-600 transition">
                 <i class="fa-solid fa-user-plus mr-2"></i> Undang Baru
-            </button>
-            <button class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
-                <i class="fa-solid fa-paper-plane mr-2"></i> Resend Semua
-            </button>
+            </a>
         </div>
     </div>
+
+    @if (session('success'))
+    <div class="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">
+        {{ session('success') }}
+    </div>
+    @endif
+    @if ($errors->any())
+    <div class="rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm space-y-1">
+        @foreach ($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    </div>
+    @endif
 
     <div class="grid gap-4 md:grid-cols-3">
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
                 <p class="text-sm text-slate-500">Total Pending</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">7</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $pending->count() }}</p>
             </div>
             <span class="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700">Perlu aksi</span>
         </div>
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
-                <p class="text-sm text-slate-500">Kadaluwarsa < 3 hari</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">3</p>
+                <p class="text-sm text-slate-500">Kadaluwarsa &lt;= 3 hari</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $expiringSoon->count() }}</p>
             </div>
             <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700">Prioritas</span>
         </div>
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
                 <p class="text-sm text-slate-500">Terkirim hari ini</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">2</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $sentToday->count() }}</p>
             </div>
             <span class="text-xs px-2 py-1 rounded-full bg-cyan-100 text-cyan-700">Baru</span>
         </div>
@@ -50,12 +65,9 @@
                         <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Invitations</h2>
                     </div>
                     <div class="flex gap-2">
-                        <input type="text" placeholder="Cari email..." class="w-full sm:w-52 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
-                        <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
-                            <option>Semua role</option>
-                            <option>Admin</option>
-                            <option>Editor</option>
-                            <option>Viewer</option>
+                        <input type="text" placeholder="Cari email..." class="w-full sm:w-52 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition" disabled>
+                        <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition" disabled>
+                            <option>Role: member</option>
                         </select>
                     </div>
                 </div>
@@ -72,40 +84,55 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/40">
-                            @foreach ([
-                                ['email' => 'alex@doit.id', 'role' => 'Editor', 'sent' => '2 hari lalu', 'expire' => '2 hari lagi'],
-                                ['email' => 'sinta@doit.id', 'role' => 'Viewer', 'sent' => 'Kemarin', 'expire' => '6 hari lagi'],
-                                ['email' => 'bima@doit.id', 'role' => 'Viewer', 'sent' => 'Hari ini', 'expire' => '7 hari lagi'],
-                                ['email' => 'lisa@doit.id', 'role' => 'Admin', 'sent' => '3 hari lalu', 'expire' => '1 hari lagi'],
-                                ['email' => 'amir@doit.id', 'role' => 'Editor', 'sent' => '1 minggu lalu', 'expire' => 'Habis'],
-                            ] as $invite)
+                            @forelse ($pending as $invite)
+                            @php
+                                $expiryBadge = 'bg-slate-100 text-slate-700';
+                                $expiryLabel = 'Tidak diatur';
+                                if ($invite->expires_at) {
+                                    $expiryLabel = $invite->expires_at->isPast() ? 'Habis' : $invite->expires_at->diffForHumans();
+                                    if ($invite->expires_at->isPast()) {
+                                        $expiryBadge = 'bg-red-100 text-red-700';
+                                    } elseif ($invite->expires_at->lte(now()->addDays(3))) {
+                                        $expiryBadge = 'bg-orange-100 text-orange-700';
+                                    } else {
+                                        $expiryBadge = 'bg-emerald-100 text-emerald-700';
+                                    }
+                                }
+                            @endphp
                             <tr>
                                 <td class="px-4 py-3">
-                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $invite['email'] }}</p>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $invite->email }}</p>
                                 </td>
                                 <td class="px-4 py-3">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
-                                        @if($invite['role'] === 'Admin') bg-blue-100 text-blue-700
-                                        @elseif($invite['role'] === 'Editor') bg-cyan-100 text-cyan-700
-                                        @else bg-slate-100 text-slate-700 @endif">
-                                        {{ $invite['role'] }}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700">
+                                        {{ $invite->role }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-slate-500">{{ $invite['sent'] }}</td>
+                                <td class="px-4 py-3 text-sm text-slate-500">{{ optional($invite->created_at)->diffForHumans() }}</td>
                                 <td class="px-4 py-3">
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
-                                        @if($invite['expire'] === 'Habis') bg-red-100 text-red-700
-                                        @elseif(str_contains($invite['expire'], '1 hari')) bg-orange-100 text-orange-700
-                                        @else bg-emerald-100 text-emerald-700 @endif">
-                                        {{ $invite['expire'] }}
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $expiryBadge }}">
+                                        {{ $expiryLabel }}
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-right space-x-2">
-                                    <button class="text-sm text-cyan-600 hover:text-cyan-700">Resend</button>
-                                    <button class="text-sm text-red-500 hover:text-red-600">Batalkan</button>
+                                    <form method="POST" action="{{ route('teams.invitations.resend', [$team, $invite]) }}" class="inline">
+                                        @csrf
+                                        <button class="text-sm text-cyan-600 hover:text-cyan-700">Resend</button>
+                                    </form>
+                                    <form method="POST" action="{{ route('teams.invitations.cancel', [$team, $invite]) }}" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="text-sm text-red-500 hover:text-red-600">Batalkan</button>
+                                    </form>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                                    Belum ada undangan pending.
+                                </td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
