@@ -1,27 +1,36 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
+@extends('layouts.auth-layout')
+
+@section('content')
+<div>
+  <h2 class="text-2xl font-semibold mb-1">Konfirmasi Password</h2>
+  <p class="text-white/70 text-sm mb-6">Masukkan password untuk melanjutkan ke tindakan sensitif.</p>
+
+  <form method="POST" action="{{ route('password.confirm') }}" class="space-y-4">
+    @csrf
+
+    <div>
+      <label class="block text-sm text-white/70 mb-1">Password</label>
+      <input type="password" name="password" required placeholder="••••••••"
+        class="w-full rounded-xl py-3 px-4 bg-white/5 border border-white/10 
+               placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400 
+               outline-none text-white" />
     </div>
 
-    <form method="POST" action="{{ route('password.confirm') }}">
-        @csrf
+    @error('password')
+      <p class="text-red-400 text-sm">{{ $message }}</p>
+    @enderror
 
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
+    <button type="submit"
+      class="w-full py-3 rounded-xl bg-cyan-500/90 hover:bg-cyan-500 
+             text-white font-semibold transition">
+      Konfirmasi
+    </button>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <div class="flex justify-end mt-4">
-            <x-primary-button>
-                {{ __('Confirm') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+    <div class="text-center">
+      <a href="{{ route('password.request') }}" class="text-sm text-cyan-400 hover:underline">
+        Lupa password?
+      </a>
+    </div>
+  </form>
+</div>
+@endsection

@@ -23,29 +23,40 @@ class Team extends Model
         'team_code' => 'encrypted',
     ];
 
-    // RELATIONS
+    // OWNER
     public function owner()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    // MEMBERS (pivot detail)
     public function members()
     {
-        return $this->hasMany(TeamMember::class);
+        return $this->hasMany(TeamMember::class, 'team_id');
     }
 
+    // USERS (pivot belongsToMany)
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'team_members', 'team_id', 'user_id')
+                    ->withPivot('id_member', 'role', 'joined_at');
+    }
+
+    // CATEGORIES
     public function categories()
     {
-        return $this->hasMany(Category::class);
+        return $this->hasMany(Category::class, 'team_id');
     }
 
+    // TASKS
     public function tasks()
     {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class, 'team_id');
     }
 
+    // INVITATIONS
     public function invitations()
     {
-        return $this->hasMany(TeamInvitation::class);
+        return $this->hasMany(TeamInvitation::class, 'team_id');
     }
 }

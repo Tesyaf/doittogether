@@ -1,39 +1,40 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ showPassword: false }">
+<html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@yield('title', 'DoItTogether')</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <title>{{ $title ?? 'DoItTogether' }}</title>
+
+  {{-- Favicon (opsional) --}}
+  <link rel="icon" href="/favicon.ico" />
+
+  {{-- Fonts --}}
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700" rel="stylesheet" />
+
+  {{-- Vite --}}
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <style>
-    @keyframes blob1 {
-      0% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(28px) scale(1.06); }
-      100% { transform: translateY(0px) scale(1); }
-    }
-    @keyframes blob2 {
-      0% { transform: translateX(0px) scale(1); }
-      50% { transform: translateX(-20px) scale(1.04); }
-      100% { transform: translateX(0px) scale(1); }
-    }
-    .animate-blob1 { animation: blob1 8s ease-in-out infinite; }
-    .animate-blob2 { animation: blob2 10s ease-in-out infinite; }
-  </style>
 </head>
 
-<body class="min-h-screen flex flex-col bg-[#0f172a] relative overflow-hidden">
-  @include('partials.navbar-guest')
+<body class="min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white font-sans">
 
-  {{-- Konten utama --}}
-  <main class="flex-1 flex justify-center items-center relative">
-    @yield('content')
-  </main>
+  {{-- Container Konten --}}
+  <div class="min-h-screen flex flex-col">
 
-  {{-- Footer --}}
-  @include('partials.footer')
+    {{-- Slot konten utama --}}
+    <main class="flex-1">
+      @yield('content')
+    </main>
+
+  </div>
+  <a href="{{ route('register') }}"
+    class="fixed bottom-6 right-6 md:hidden bg-cyan-500 text-white font-semibold
+          px-6 py-3 rounded-full shadow-lg shadow-cyan-500/30
+          animate-bounce hover:bg-cyan-600 transition">
+    Mulai
+  </a>
 </body>
+
 </html>

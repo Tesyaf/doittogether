@@ -1,44 +1,55 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'DoItTogether') }}</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ $title ?? 'DoItTogether' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="font-sans antialiased text-gray-900 bg-gray-50 dark:bg-[#0f172a] min-h-screen flex flex-col">
+<body class="bg-[#020617] text-white">
 
-    @include('partials.navbar')
+<div x-data="{ sidebarOpen: false }" class="flex min-h-screen">
 
-    @if (session('status'))
-    <div class="fixed top-4 left-1/2 -translate-x-1/2 bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-xl shadow-md z-50">
-        {{ session('status') }}
+    {{-- SIDEBAR LEVEL 1 --}}
+    @include('layouts.sidebar-level1', ['teams' => $teams])
+
+    {{-- SIDEBAR LEVEL 2 (desktop) --}}
+    <div class="hidden md:block">
+        @include('layouts.sidebar-level2', [
+            'currentTeam' => $currentTeam,
+            'categories'  => $categories
+        ])
     </div>
-    @endif
 
-    <main class="flex-1 flex items-center justify-center py-8 sm:py-12">
-        @yield('content')
-    </main>
+    {{-- MOBILE SIDEBAR OVERLAY --}}
+    <div x-show="sidebarOpen"
+         @click="sidebarOpen = false"
+         x-transition.opacity
+         class="fixed inset-0 bg-black/50 z-40 md:hidden"></div>
 
-    <footer class="text-center text-xs text-gray-500 py-4">
-        <p>© {{ date('Y') }} DoItTogether. Dibuat dengan oleh Ilkom.</p>
-    </footer>
+    {{-- SIDEBAR LEVEL 2 (mobile slide) --}}
+    <div x-show="sidebarOpen"
+         x-transition
+         class="fixed left-0 top-0 bottom-0 w-64 bg-[#0b1120] z-50 md:hidden">
+        @include('layouts.sidebar-level2', [
+            'currentTeam' => $currentTeam,
+            'categories'  => $categories
+        ])
+    </div>
 
-    {{-- Alpine Transitions (Opsional) --}}
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
-    </style>
+    {{-- MAIN CONTENT --}}
+    <div class="flex-1 flex flex-col">
+
+        @include('layouts.dashboard-topbar')
+
+        <main class="flex-1 p-4 md:p-6">
+            @yield('content')
+        </main>
+
+    </div>
+
+</div>
+
 </body>
-
 </html>

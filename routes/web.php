@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\TeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,10 +28,33 @@ Route::get('/dashboard', function () {
 Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware(['auth'])->group(function () {
+
+    // SHOW PROFILE
+    Route::get('/profile', [ProfileController::class, 'show'])
+        ->name('profile.show');
+
+    // EDIT PROFILE PAGE
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+
+    // UPDATE PROFILE
+    Route::put('/profile/update', [ProfileController::class, 'update'])
+        ->name('profile.update');
+
+    // UPDATE PASSWORD
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
+        ->name('profile.password');
+
+    Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
+
+    Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+
+    Route::get('/teams/switch/{team}', [TeamController::class, 'switch'])->name('teams.switch');
+
+    Route::get('/teams/{team}/edit', [TeamController::class, 'edit'])->name('teams.edit');
+    Route::put('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
