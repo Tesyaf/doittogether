@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\TeamDashboardController;
+use App\Http\Controllers\UserDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,9 +22,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Dashboard pengguna (global)
+Route::get('/dashboard', [UserDashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
+
+// Dashboard team
+Route::get('/teams/{team}', [TeamDashboardController::class, 'index'])
+    ->middleware(['auth', 'team'])
+    ->name('teams.dashboard');
+
 
 
 Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
@@ -47,14 +56,22 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.password');
 
     Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
-
     Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
 
-    Route::get('/teams/switch/{team}', [TeamController::class, 'switch'])->name('teams.switch');
+    Route::get('/teams/switch/{id}', [TeamController::class, 'switch'])->name('teams.switch');
 
-    Route::get('/teams/{team}/edit', [TeamController::class, 'edit'])->name('teams.edit');
-    Route::put('/teams/{team}', [TeamController::class, 'update'])->name('teams.update');
+    Route::get('/teams/{team}', [TeamController::class, 'dashboard'])->name('teams.dashboard');
+
+    Route::get('/teams/{team}/members', [TeamController::class, 'members'])->name('teams.members');
+    Route::get('/teams/{team}/invite', [TeamController::class, 'invite'])->name('teams.invite');
+    Route::get('/teams/{team}/invitations', [TeamController::class, 'pendingInvitations'])->name('teams.invitations.pending');
+
+    Route::get('/teams/{team}/activity', [TeamController::class, 'activityLog'])->name('teams.activity');
+    Route::get('/teams/{team}/notifications', [TeamController::class, 'notifications'])->name('teams.notifications');
+
+    Route::get('/teams/{team}/settings', [TeamController::class, 'settings'])->name('teams.settings');
+    Route::put('/teams/{team}/settings', [TeamController::class, 'updateSettings'])->name('teams.settings.update');
 });
 
 require __DIR__ . '/auth.php';

@@ -7,137 +7,137 @@ use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 
 class TeamController extends Controller
 {
-    /**
-     * Display all teams the user belongs to.
-     */
     public function index()
     {
         $teams = Auth::user()->teams()->orderBy('name')->get();
-
         return view('teams.index', compact('teams'));
     }
 
-    /**
-     * Show create team page.
-     */
     public function create()
     {
         return view('teams.create');
     }
 
-    /**
-     * Store a new team.
-     */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:150'],
-            'description' => ['nullable', 'string', 'max:500'],
-            'icon_url' => ['nullable', 'string', 'max:1024'],
+        $data = $request->validate([
+            'name' => 'required|max:150',
+            'description' => 'nullable|max:500',
+            'icon_url' => 'nullable|string|max:1024',
         ]);
 
         $user = Auth::user();
 
-        // generate secure team code
-        $teamCode = Str::uuid();
-
-        // create team
         $team = Team::create([
-            'name' => $validated['name'],
-            'team_code' => $teamCode,
+            'id' => Str::uuid(),
+            'name' => $data['name'],
+            'team_code' => Str::uuid(),
             'created_by' => $user->id,
         ]);
 
-        // update icon or description if provided
-        if (!empty($validated['icon_url'])) {
-            $team->icon_url = $validated['icon_url'];
-        }
-        if (!empty($validated['description'])) {
-            $team->description = $validated['description'];
-        }
-        $team->save();
-
-        // register creator as OWNER in pivot table
         TeamMember::create([
-            'id_member' => Str::uuid()->toString(),
+            'id_member' => Str::uuid(),
             'team_id' => $team->id,
             'user_id' => $user->id,
             'role' => 'owner',
             'joined_at' => now(),
         ]);
 
-        // set selected team in session
         session(['team_id' => $team->id]);
 
-        return redirect()->route('dashboard')
+        return redirect()->route('teams.dashboard', $team->id)
                          ->with('success', 'Tim berhasil dibuat!');
     }
 
-    /**
-     * Switch active team.
-     */
-    public function switch($teamId)
+    public function switch($id)
     {
         $user = Auth::user();
 
-        // verify user is member of the team
-        $isMember = $user->teams()->where('teams.id', $teamId)->exists();
-
-        if (! $isMember) {
-            abort(403, 'Anda tidak terdaftar pada tim ini.');
+        if (!$user->teams()->where('teams.id', $id)->exists()) {
+            abort(403);
         }
 
-        session(['team_id' => $teamId]);
+        session(['team_id' => $id]);
 
-        return redirect()->route('dashboard')
-                         ->with('success', 'Berhasil berpindah tim.');
+        return redirect()->route('teams.dashboard', $id);
     }
 
-    /**
-     * Edit team (owner only).
-     */
-    public function edit(Team $team)
+    public function dashboard(Team $team)
     {
-        $this->authorizeOwner($team);
-
-        return view('teams.edit', compact('team'));
+        $this->ensureMember($team);
+        return view('teams.dashboard', compact('team'));
     }
 
-    /**
-     * Update team info.
-     */
-    public function update(Request $request, Team $team)
+    public function members(Team $team)
     {
-        $this->authorizeOwner($team);
+        $this->ensureMember($team);
+        $members = $team->members()->with('user')->get();
+        return view('teams.members', compact('team', 'members'));
+    }
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:150'],
-            'description' => ['nullable', 'string', 'max:500'],
-            'icon_url' => ['nullable', 'string', 'max:1024'],
+    public function invite(Team $team)
+    {
+        $this->ensureOwner($team);
+        return view('teams.invite', compact('team'));
+    }
+
+    public function pendingInvitations(Team $team)
+    {
+        $this->ensureOwner($team);
+        $invitations = $team->invitations()->get();
+        return view('teams.pending-invitations', compact('team', 'invitations'));
+    }
+
+    public function activityLog(Team $team)
+    {
+        $this->ensureMember($team);
+        $logs = $team->members()->with('activityLogs')->get();
+        return view('teams.activity-log', compact('team', 'logs'));
+    }
+
+    public function notifications(Team $team)
+    {
+        $this->ensureMember($team);
+        return view('teams.notifications', compact('team'));
+    }
+
+    public function settings(Team $team)
+    {
+        $this->ensureOwner($team);
+        return view('teams.settings', compact('team'));
+    }
+
+    public function updateSettings(Request $request, Team $team)
+    {
+        $this->ensureOwner($team);
+
+        $data = $request->validate([
+            'name' => 'required|max:150',
+            'description' => 'nullable|max:500',
+            'icon_url' => 'nullable|max:1024',
         ]);
 
-        $team->update($validated);
+        $team->update($data);
 
-        return redirect()->route('teams.edit', $team)
-                         ->with('success', 'Data tim berhasil diperbarui.');
+        return back()->with('success', 'Pengaturan tim diperbarui.');
     }
 
-    /**
-     * Helper: ensure active user is owner of the team.
-     */
-    private function authorizeOwner(Team $team)
+    private function ensureMember(Team $team)
     {
-        $user = Auth::user();
+        abort_unless(
+            $team->members()->where('user_id', Auth::id())->exists(),
+            403
+        );
+    }
 
-        $isOwner = $team->members()
-            ->where('user_id', $user->id)
-            ->where('role', 'owner')
-            ->exists();
-
-        abort_if(! $isOwner, 403, 'Hanya pemilik tim yang bisa melakukan tindakan ini.');
+    private function ensureOwner(Team $team)
+    {
+        abort_unless(
+            $team->members()->where('user_id', Auth::id())->where('role', 'owner')->exists(),
+            403
+        );
     }
 }

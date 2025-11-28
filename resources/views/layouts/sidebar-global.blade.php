@@ -1,6 +1,5 @@
-{{-- sidebar-level1.blade.php --}}
-<aside class="hidden md:flex w-20 bg-[#020617] border-r border-white/10 
-              flex-col items-center py-4 gap-4">
+<aside class="hidden md:flex md:fixed md:top-0 md:left-0 w-20 bg-[#020617] border-r border-white/10 min-h-screen flex
+              flex-col items-center py-4 gap-4 z-50">
 
     {{-- Logo --}}
     <a href="{{ route('dashboard') }}"
@@ -41,4 +40,17 @@
         +
     </button>
 
+    <div class="mt-auto pt-4 border-t border-white/40">
+        <form method="POST" action="{{ route('logout') }}" class="w-full">
+            @csrf
+            <button
+                type="submit"
+                class="w-full flex justify-center items-center p-3 mt-4
+               rounded-2xl bg-white/5 text-white/70 border border-white/10
+               hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30
+               transition-all">
+                <i class="fa-solid fa-right-from-bracket text-lg"></i>
+            </button>
+        </form>
+    </div>
 </aside>

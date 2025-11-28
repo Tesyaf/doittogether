@@ -10,7 +10,7 @@ class AppViewServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        View::composer('layouts.app', function ($view) {
+        View::composer('layouts.user-app', function ($view) {
 
             $user = Auth::user();
 
