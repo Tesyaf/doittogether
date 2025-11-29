@@ -11,8 +11,10 @@ class ProfileController extends Controller
 {
     public function show(Request $request)
     {
+        $user = $request->user()->fresh();
+
         return view('profile.show', [
-            'user' => $request->user(),
+            'user' => $user,
         ]);
     }
 

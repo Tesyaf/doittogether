@@ -5,9 +5,32 @@
  */
 
 import axios from 'axios';
+import { showLoader, hideLoader } from './loader';
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+window.axios.interceptors.request.use(
+    (config) => {
+        showLoader();
+        return config;
+    },
+    (error) => {
+        hideLoader();
+        return Promise.reject(error);
+    }
+);
+
+window.axios.interceptors.response.use(
+    (response) => {
+        hideLoader();
+        return response;
+    },
+    (error) => {
+        hideLoader();
+        return Promise.reject(error);
+    }
+);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

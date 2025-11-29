@@ -17,6 +17,7 @@
 </head>
 
 <body class="min-h-screen bg-gradient-to-b from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white font-sans">
+  @include('layouts.partials.loading-overlay', ['variant' => 'landing'])
 
   {{-- Container Konten --}}
   <div class="min-h-screen flex flex-col">

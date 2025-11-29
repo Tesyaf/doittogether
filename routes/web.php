@@ -14,6 +14,8 @@ use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\MasterTaskStatusController;
 use App\Http\Controllers\Admin\MasterTaskPriorityController;
+use App\Http\Controllers\CalendarFeedController;
+use App\Http\Controllers\CalendarIntegrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +56,12 @@ Route::middleware(['auth'])->group(function () {
     // UPDATE PASSWORD
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
         ->name('profile.password');
+
+    // Google Calendar integration (API)
+    Route::get('/calendar/connect', [CalendarIntegrationController::class, 'redirect'])->name('calendar.connect');
+    Route::get('/calendar/connect/callback', [CalendarIntegrationController::class, 'callback'])->name('calendar.callback');
+    Route::post('/calendar/disconnect', [CalendarIntegrationController::class, 'disconnect'])->name('calendar.disconnect');
+    Route::post('/calendar/sync', [CalendarIntegrationController::class, 'sync'])->name('calendar.sync');
 
     Route::middleware('verified_or_admin')->group(function () {
         Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');

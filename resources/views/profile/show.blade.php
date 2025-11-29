@@ -24,7 +24,7 @@
                 <div>
                     <p class="text-sm text-slate-300">Profil</p>
                     <h1 class="text-2xl md:text-3xl font-semibold text-white">{{ $user?->name }}</h1>
-                    <div class="flex items-center gap-2 mt-1 text-sm text-slate-300">
+                    <div class="flex flex-wrap items-center gap-2 mt-1 text-sm text-slate-300">
                         <i class="fa-solid fa-envelope text-cyan-400"></i>
                         <span>{{ $user?->email }}</span>
                         @if($user?->email_verified_at)
@@ -34,6 +34,12 @@
                         @else
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-200 text-xs">
                                 <i class="fa-solid fa-clock"></i> Belum verifikasi
+                            </span>
+                        @endif
+                        @if($user?->google_calendar_refresh_token || $user?->google_calendar_access_token)
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-200 text-xs font-semibold">
+                                <i class="fa-brands fa-google text-cyan-300"></i>
+                                Google Calendar terhubung
                             </span>
                         @endif
                     </div>
@@ -132,6 +138,46 @@
                     Kelola Password
                 </a>
             </div>
+        </div>
+
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl backdrop-blur-sm space-y-3">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-300">Integrasi</p>
+                    <h2 class="text-xl font-semibold text-white">Google Calendar (API)</h2>
+                </div>
+                @if($user->google_calendar_refresh_token || $user->google_calendar_access_token)
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-100 text-xs font-semibold">
+                        <i class="fa-solid fa-check-circle"></i> Terhubung
+                    </span>
+                @endif
+            </div>
+            @if($user->google_calendar_refresh_token || $user->google_calendar_access_token)
+                <div class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-100 text-sm px-3 py-2 flex items-start gap-2">
+                    <i class="fa-solid fa-circle-check mt-0.5"></i>
+                    <div>
+                        <p class="font-semibold">Akun Google terhubung</p>
+                        <p class="text-emerald-100/80">Sinkronkan tugas ke kalender Google Anda kapan saja.</p>
+                    </div>
+                </div>
+                <form method="POST" action="{{ route('calendar.sync') }}" class="flex flex-wrap gap-2">
+                    @csrf
+                    <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
+                        <i class="fa-solid fa-arrows-rotate"></i> Sinkronisasi sekarang
+                    </button>
+                </form>
+                <form method="POST" action="{{ route('calendar.disconnect') }}" class="mt-2">
+                    @csrf
+                    <button class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-red-400/50 text-red-200 text-xs hover:bg-red-500/10 transition">
+                        Putuskan koneksi
+                    </button>
+                </form>
+            @else
+                <p class="text-sm text-slate-400">Sambungkan akun Google untuk membuat/menyegarkan event deadline tugas di kalender Google Anda.</p>
+                <a href="{{ route('calendar.connect') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
+                    <i class="fa-brands fa-google"></i> Sambungkan Google Calendar
+                </a>
+            @endif
         </div>
     </div>
 </div>

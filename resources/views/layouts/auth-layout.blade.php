@@ -10,6 +10,7 @@
 </head>
 
 <body class="bg-[#0f172a] text-white flex items-center justify-center min-h-screen font-inter antialiased">
+  @include('layouts.partials.loading-overlay', ['variant' => 'auth'])
   <div class="max-w-5xl w-full mx-auto flex flex-col md:flex-row bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl">
 
     {{-- Left Section (Logo + Image) --}}
