@@ -16,6 +16,8 @@ class AppViewServiceProvider extends ServiceProvider
             'layouts.user-app',
             'layouts.sidebar-global',
             'layouts.sidebar-team',
+            'repositories.edit',
+            'repositories.commits',
         ], function ($view) {
 
             $user = Auth::user();
@@ -23,9 +25,16 @@ class AppViewServiceProvider extends ServiceProvider
             if (!$user) {
                 // Kalau belum login, jangan kirim apa-apa
                 $view->with([
-                    'teams'       => collect(),
-                    'currentTeam' => null,
-                    'categories'  => collect(),
+                    'teams'                  => collect(),
+                    'currentTeam'            => null,
+                    'categories'             => collect(),
+                    'currentMember'          => null,
+                    'isTeamOwner'            => false,
+                    'isTeamAdmin'            => false,
+                    'isTeamOwnerOrAdmin'     => false,
+                    'isTeamOwnerOrAppAdmin'  => false,
+                    'isAppAdmin'             => false,
+                    'teamRepository'         => null,
                 ]);
                 return;
             }
@@ -47,10 +56,25 @@ class AppViewServiceProvider extends ServiceProvider
             // Ambil kategori milik current team (kalau ada)
             $categories = $currentTeam?->categories()->orderBy('name')->get() ?? collect();
 
+            $currentMember = $currentTeam?->members()->where('user_id', $user->id)->first();
+            $isTeamOwner = $currentMember?->role === 'owner';
+            $isTeamAdmin = $currentMember?->role === 'admin';
+            $isAppAdmin = (bool) ($user?->is_admin);
+            $teamRepository = $currentTeam?->repository;
+            $githubInstallUrl = config('services.github_app.install_url');
+
             $view->with([
-                'teams'       => $teams,
-                'currentTeam' => $currentTeam,
-                'categories'  => $categories,
+                'teams'                 => $teams,
+                'currentTeam'           => $currentTeam,
+                'categories'            => $categories,
+                'currentMember'         => $currentMember,
+                'isTeamOwner'           => $isTeamOwner,
+                'isTeamAdmin'           => $isTeamAdmin,
+                'isTeamOwnerOrAdmin'    => $isTeamOwner || $isTeamAdmin,
+                'isTeamOwnerOrAppAdmin' => $isTeamOwner || $isAppAdmin,
+                'isAppAdmin'            => $isAppAdmin,
+                'teamRepository'        => $teamRepository,
+                'githubInstallUrl'      => $githubInstallUrl,
             ]);
         });
     }

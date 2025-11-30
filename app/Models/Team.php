@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Models\TeamRepository;
+use App\Models\RepositoryCommit;
 
 class Team extends Model
 {
@@ -48,6 +50,22 @@ class Team extends Model
     public function categories()
     {
         return $this->hasMany(Category::class, 'team_id');
+    }
+
+    // REPOSITORY (satu per tim)
+    public function repository()
+    {
+        return $this->hasOne(TeamRepository::class, 'team_id');
+    }
+
+    public function repositoryCommits()
+    {
+        return $this->hasManyThrough(
+            RepositoryCommit::class,
+            TeamRepository::class,
+            'team_id',
+            'team_repository_id'
+        );
     }
 
     // TASKS

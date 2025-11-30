@@ -38,6 +38,14 @@
                     <i class="fa-solid fa-list-check"></i> Tugas
                 </a>
 
+                @if($teamRepository)
+                <a href="{{ route('repositories.commits', $currentTeam->id) }}"
+                    class="flex items-center gap-2 px-3 py-2 rounded-xl
+                           {{ request()->routeIs('repositories.commits') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
+                    <i class="fa-brands fa-github"></i> Commits
+                </a>
+                @endif
+
             </div>
         </div>
 
@@ -72,10 +80,26 @@
 
             <div x-show="open_settings" x-transition class="mt-2 space-y-1">
 
+                @if($isTeamOwnerOrAppAdmin)
+                <a href="{{ route('categories.index', $currentTeam->id) }}"
+                    class="flex items-center gap-2 px-3 py-2 rounded-xl
+                           {{ request()->routeIs('categories.*') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
+                    <i class="fa-solid fa-folder"></i> Kategori
+                </a>
+                @endif
+
                 <a href="{{ route('teams.settings', $currentTeam->id) }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">
                     <i class="fa-solid fa-gear"></i> Pengaturan Tim
                 </a>
+
+                @if($isTeamOwnerOrAppAdmin)
+                <a href="{{ route('repositories.edit', $currentTeam->id) }}"
+                    class="flex items-center gap-2 px-3 py-2 rounded-xl
+                           {{ request()->routeIs('repositories.edit') ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5' }}">
+                    <i class="fa-brands fa-github"></i> Integrasi GitHub
+                </a>
+                @endif
 
                 <a href="{{ route('profile.show') }}"
                     class="flex items-center gap-2 px-3 py-2 rounded-xl text-white/70">

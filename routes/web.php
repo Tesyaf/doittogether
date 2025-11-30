@@ -9,6 +9,8 @@ use App\Http\Controllers\TaskCommentController;
 use App\Http\Controllers\TaskAttachmentController;
 use App\Http\Controllers\TaskAssigneeController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TeamRepositoryController;
+use App\Http\Controllers\GitHubWebhookController;
 use App\Http\Controllers\TeamDashboardController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -31,6 +33,10 @@ use App\Http\Controllers\CalendarIntegrationController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Webhooks (tanpa auth/CSRF)
+Route::post('/webhooks/github/app', [GitHubWebhookController::class, 'handleApp'])->name('webhooks.github.app');
+Route::post('/webhooks/github/{teamRepository}', [GitHubWebhookController::class, 'handle'])->name('webhooks.github');
 
 Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'callback']);
@@ -84,6 +90,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/teams/{team}/settings', [TeamController::class, 'settings'])->name('teams.settings');
         Route::put('/teams/{team}/settings', [TeamController::class, 'updateSettings'])->name('teams.settings.update');
 
+        // REPOSITORY & COMMITS
+        Route::get('/teams/{team}/repo', [TeamRepositoryController::class, 'edit'])->name('repositories.edit');
+        Route::post('/teams/{team}/repo', [TeamRepositoryController::class, 'upsert'])->name('repositories.upsert');
+        Route::delete('/teams/{team}/repo', [TeamRepositoryController::class, 'disconnect'])->name('repositories.disconnect');
+        Route::get('/teams/{team}/commits', [TeamRepositoryController::class, 'commits'])->name('repositories.commits');
+
         // TASK ROUTES (nested dalam team)
         Route::get('/teams/{team}/tasks', [TaskController::class, 'index'])->name('tasks.index');
         Route::get('/teams/{team}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
@@ -105,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/teams/{team}/tasks/{task}/assignees/{memberId}', [TaskAssigneeController::class, 'destroy'])->name('tasks.assignees.destroy');
 
         // CATEGORY ROUTES
+        Route::get('/teams/{team}/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/teams/{team}/categories/create', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/teams/{team}/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::get('/teams/{team}/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
