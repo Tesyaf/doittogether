@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('email', 255); // akan terenkripsi di model
             $table->uuid('code')->unique();
             $table->foreignUuid('invited_by_member')->references('id_member')->on('team_members')->restrictOnDelete();
+            $table->enum('role', ['admin','member'])->default('member');
             $table->enum('status', ['pending','accepted','revoked','expired'])->default('pending');
             $table->timestamp('expires_at')->nullable();
             $table->timestamp('created_at')->useCurrent();

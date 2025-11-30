@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.user-app')
 
 @section('content')
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
@@ -29,10 +29,10 @@
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2">
                     @foreach ([
-                        ['label' => 'Email', 'desc' => 'Kirim ringkasan dan alert ke email'],
-                        ['label' => 'In-app', 'desc' => 'Tampilkan notifikasi di dashboard'],
-                        ['label' => 'Push', 'desc' => 'Push ke perangkat mobile'],
-                        ['label' => 'Slack', 'desc' => 'Kirim ke channel Slack tim'],
+                    ['label' => 'Email', 'desc' => 'Kirim ringkasan dan alert ke email'],
+                    ['label' => 'In-app', 'desc' => 'Tampilkan notifikasi di dashboard'],
+                    ['label' => 'Push', 'desc' => 'Push ke perangkat mobile'],
+                    ['label' => 'Slack', 'desc' => 'Kirim ke channel Slack tim'],
                     ] as $channel)
                     <label class="flex items-start gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 hover:border-cyan-500 transition">
                         <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" checked>
@@ -55,10 +55,10 @@
                 </div>
                 <div class="space-y-3">
                     @foreach ([
-                        ['title' => 'Aktivitas sprint', 'desc' => 'Update sprint, perubahan status task'],
-                        ['title' => 'Undangan & keanggotaan', 'desc' => 'Undangan baru, persetujuan, role change'],
-                        ['title' => 'Keamanan', 'desc' => 'Login mencurigakan, 2FA, kebijakan'],
-                        ['title' => 'Laporan ringkasan', 'desc' => 'Ringkasan mingguan dan bulanan'],
+                    ['title' => 'Aktivitas sprint', 'desc' => 'Update sprint, perubahan status task'],
+                    ['title' => 'Undangan & keanggotaan', 'desc' => 'Undangan baru, persetujuan, role change'],
+                    ['title' => 'Keamanan', 'desc' => 'Login mencurigakan, 2FA, kebijakan'],
+                    ['title' => 'Laporan ringkasan', 'desc' => 'Ringkasan mingguan dan bulanan'],
                     ] as $topic)
                     <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div>

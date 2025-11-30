@@ -1,25 +1,54 @@
-<x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+@extends('layouts.auth-layout')
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@section('content')
+<div>
 
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
+  {{-- Title --}}
+  <h2 class="text-2xl font-semibold mb-1">Lupa Password?</h2>
+  <p class="text-white/70 text-sm mb-6">
+    Masukkan email kamu dan kami akan kirim tautan untuk mengatur ulang password.
+  </p>
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+  {{-- Status (jika berhasil kirim link reset) --}}
+  @if (session('status'))
+      <div class="mb-4 text-sm text-cyan-400">
+          {{ session('status') }}
+      </div>
+  @endif
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+  {{-- Form --}}
+  <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+      @csrf
+
+      {{-- Email --}}
+      <div>
+        <label class="block text-sm text-white/70 mb-1">Email</label>
+        <input type="email" name="email" required autofocus 
+            placeholder="contoh@email.com"
+            class="w-full rounded-xl py-3 px-4 bg-white/5 border border-white/10
+                   placeholder:text-white/40 focus:ring-2 focus:ring-cyan-400
+                   outline-none text-white" />
+
+        @error('email')
+            <p class="text-sm text-red-400 mt-1">{{ $message }}</p>
+        @enderror
+      </div>
+
+      {{-- Submit --}}
+      <button type="submit"
+          class="w-full py-3 rounded-xl bg-cyan-500/90 hover:bg-cyan-500 
+                 text-white font-semibold transition">
+          Kirim Link Reset Password
+      </button>
+  </form>
+
+  {{-- Back to login --}}
+  <div class="text-center mt-4">
+    <a href="{{ route('login') }}" 
+       class="text-sm text-cyan-400 hover:underline">
+      Kembali ke halaman login
+    </a>
+  </div>
+
+</div>
+@endsection
