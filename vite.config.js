@@ -11,4 +11,7 @@ export default defineConfig({
             refresh: true,
         }),
     ],
+    base: process.env.ASSET_URL
+        ? process.env.ASSET_URL + '/build/'
+        : '/build/',
 });
