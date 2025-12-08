@@ -33,6 +33,12 @@ use App\Http\Controllers\CalendarIntegrationController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/debug-smtp', function () {
+    $fp = @fsockopen('smtp-relay.brevo.com', 587, $errno, $errstr, 5);
+    return $fp
+        ? 'SMTP reachable'
+        : "SMTP blocked/unreachable: $errno $errstr";
+})->middleware('auth');
 
 // Webhooks (tanpa auth/CSRF)
 Route::post('/webhooks/github/app', [GitHubWebhookController::class, 'handleApp'])->name('webhooks.github.app');
