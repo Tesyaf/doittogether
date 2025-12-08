@@ -1,19 +1,19 @@
 @extends('layouts.team-app')
 
 @section('content')
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
     {{-- Header & Actions --}}
-    <div class="flex items-start justify-between mb-6">
-        <div class="flex-1">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-6">
+        <div class="flex-1 min-w-0">
             <a href="{{ route('tasks.index', $team->id) }}" class="text-cyan-400 hover:text-cyan-300 text-sm mb-3 inline-flex items-center gap-1">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Tasks
             </a>
-            <h1 class="text-3xl font-bold text-white">{{ $task->title }}</h1>
+            <h1 class="text-3xl font-bold text-white break-words">{{ $task->title }}</h1>
             @if($task->description)
-            <p class="text-white/60 mt-2">{{ $task->description }}</p>
+            <p class="text-white/60 mt-2 break-words">{{ $task->description }}</p>
             @endif
         </div>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
             <a href="{{ route('tasks.edit', ['team' => $team->id, 'task' => $task->id]) }}"
                 class="inline-flex items-center px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition text-white">
                 <i class="fa-solid fa-edit mr-2"></i> Edit
@@ -31,17 +31,17 @@
         {{-- Main Content (Tabs) --}}
         <div class="lg:col-span-2 space-y-4">
             {{-- Tabs Navigation --}}
-            <div class="flex gap-2 bg-white/5 border-b border-white/10 rounded-t-xl">
-                <button onclick="switchTab('comments')" class="tab-btn active px-6 py-3 border-b-2 border-cyan-500 text-white font-semibold transition" data-tab="comments">
+            <div class="flex gap-2 overflow-x-auto bg-white/5 border-b border-white/10 rounded-t-xl px-2 sm:px-0">
+                <button onclick="switchTab('comments')" class="tab-btn active flex-shrink-0 px-4 sm:px-6 py-3 border-b-2 border-cyan-500 text-white font-semibold transition" data-tab="comments">
                     <i class="fa-solid fa-comments mr-2"></i> Comments
                 </button>
-                <button onclick="switchTab('attachments')" class="tab-btn px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="attachments">
+                <button onclick="switchTab('attachments')" class="tab-btn flex-shrink-0 px-4 sm:px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="attachments">
                     <i class="fa-solid fa-paperclip mr-2"></i> Attachments
                 </button>
-                <button onclick="switchTab('assignees')" class="tab-btn px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="assignees">
+                <button onclick="switchTab('assignees')" class="tab-btn flex-shrink-0 px-4 sm:px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="assignees">
                     <i class="fa-solid fa-users mr-2"></i> Assignees
                 </button>
-                <button onclick="switchTab('activity')" class="tab-btn px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="activity">
+                <button onclick="switchTab('activity')" class="tab-btn flex-shrink-0 px-4 sm:px-6 py-3 border-b-2 border-transparent text-white/60 hover:text-white transition" data-tab="activity">
                     <i class="fa-solid fa-history mr-2"></i> Activity
                 </button>
             </div>
@@ -101,15 +101,15 @@
                 {{-- Attachments List --}}
                 <div class="space-y-3">
                     @forelse($task->attachments as $attachment)
-                    <div class="flex items-center justify-between bg-white/5 border border-white/10 rounded-lg p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white/5 border border-white/10 rounded-lg p-4">
                         <div class="flex items-center gap-3">
                             <i class="fa-solid fa-file text-cyan-400"></i>
                             <div>
-                                <p class="text-sm font-semibold text-white">{{ $attachment->file_name }}</p>
+                                <p class="text-sm font-semibold text-white break-words">{{ $attachment->file_name }}</p>
                                 <p class="text-xs text-white/50">{{ $attachment->created_at->diffForHumans() }}</p>
                             </div>
                         </div>
-                        <div class="flex gap-2">
+                        <div class="flex gap-3">
                             <a href="{{ $attachment->file_url }}" target="_blank" class="text-cyan-400 hover:text-cyan-300">
                                 <i class="fa-solid fa-download"></i>
                             </a>
@@ -209,52 +209,54 @@
                 </form>
             </div>
 
-            {{-- Due Date --}}
-            @if($task->due_at)
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-xs text-white/60 mb-2">Tanggal Deadline</p>
-                <p class="text-white font-semibold">{{ $task->due_at->format('d M Y') }}</p>
-            </div>
-            @endif
-
-            {{-- Category --}}
-            @if($task->category)
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-xs text-white/60 mb-2">Kategori</p>
-                <p class="text-white font-semibold">{{ $task->category->name }}</p>
-            </div>
-            @endif
-
-            {{-- Responsible --}}
-            @if($task->responsible)
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-xs text-white/60 mb-2">Penanggung Jawab</p>
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-semibold text-white">
-                        {{ strtoupper(substr($task->responsible->user->name ?? 'A', 0, 1)) }}
-                    </div>
-                    <p class="text-white">{{ $task->responsible->user->name }}</p>
+            <div class="grid gap-3 sm:gap-4">
+                {{-- Due Date --}}
+                @if($task->due_at)
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <p class="text-xs text-white/60 mb-2">Tanggal Deadline</p>
+                    <p class="text-white font-semibold">{{ $task->due_at->format('d M Y') }}</p>
                 </div>
-            </div>
-            @endif
+                @endif
 
-            {{-- Created By --}}
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-xs text-white/60 mb-2">Dibuat oleh</p>
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-semibold text-white">
-                        {{ strtoupper(substr($task->creator->user->name ?? 'A', 0, 1)) }}
-                    </div>
-                    <p class="text-white">{{ $task->creator->user->name ?? 'Unknown' }}</p>
+                {{-- Category --}}
+                @if($task->category)
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <p class="text-xs text-white/60 mb-2">Kategori</p>
+                    <p class="text-white font-semibold">{{ $task->category->name }}</p>
                 </div>
-            </div>
+                @endif
 
-            {{-- Timestamps --}}
-            <div class="bg-white/5 border border-white/10 rounded-xl p-4">
-                <p class="text-xs text-white/60 mb-3">Informasi</p>
-                <div class="space-y-2 text-xs text-white/60">
-                    <p><span class="text-white/40">Dibuat:</span> {{ $task->created_at->format('d M Y, H:i') }}</p>
-                    <p><span class="text-white/40">Diperbarui:</span> {{ $task->updated_at->format('d M Y, H:i') }}</p>
+                {{-- Responsible --}}
+                @if($task->responsible)
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <p class="text-xs text-white/60 mb-2">Penanggung Jawab</p>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-semibold text-white">
+                            {{ strtoupper(substr($task->responsible->user->name ?? 'A', 0, 1)) }}
+                        </div>
+                        <p class="text-white">{{ $task->responsible->user->name }}</p>
+                    </div>
+                </div>
+                @endif
+
+                {{-- Created By --}}
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <p class="text-xs text-white/60 mb-2">Dibuat oleh</p>
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-semibold text-white">
+                            {{ strtoupper(substr($task->creator->user->name ?? 'A', 0, 1)) }}
+                        </div>
+                        <p class="text-white">{{ $task->creator->user->name ?? 'Unknown' }}</p>
+                    </div>
+                </div>
+
+                {{-- Timestamps --}}
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4">
+                    <p class="text-xs text-white/60 mb-3">Informasi</p>
+                    <div class="space-y-2 text-xs text-white/60">
+                        <p><span class="text-white/40">Dibuat:</span> {{ $task->created_at->format('d M Y, H:i') }}</p>
+                        <p><span class="text-white/40">Diperbarui:</span> {{ $task->updated_at->format('d M Y, H:i') }}</p>
+                    </div>
                 </div>
             </div>
         </div>

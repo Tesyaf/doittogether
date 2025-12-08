@@ -27,7 +27,7 @@
     }
 </style>
 
-<div class="max-w-2xl mx-auto">
+<div class="max-w-3xl mx-auto px-4 sm:px-6">
     <div class="mb-6">
         <a href="{{ route('tasks.index', $team->id) }}" class="text-cyan-400 hover:text-cyan-300 text-sm mb-3 inline-flex items-center gap-1">
             <i class="fa-solid fa-arrow-left"></i> Kembali ke Tasks

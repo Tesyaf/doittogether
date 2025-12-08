@@ -46,13 +46,6 @@
                         <span class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</span>
                         <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@doit.id" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
                     </label>
-                    <label class="space-y-2">
-                        <span class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role undangan</span>
-                        <select name="role" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
-                            <option value="member" @selected(old('role', 'member') === 'member')>Member (akses default)</option>
-                            <option value="admin" @selected(old('role') === 'admin')>Admin (kelola anggota & data master)</option>
-                        </select>
-                    </label>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">
@@ -78,31 +71,6 @@
                 </div>
             </form>
 
-            <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl shadow p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-slate-500">Template</p>
-                        <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Pengaturan Email</h2>
-                    </div>
-                    <button class="text-sm text-cyan-600 hover:text-cyan-700">Kelola template</button>
-                </div>
-                <div class="space-y-3">
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" checked>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Kirim salinan ke admin</p>
-                            <p class="text-sm text-slate-500">Admin akan mendapat CC setiap undangan dikirim.</p>
-                        </div>
-                    </label>
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Remind otomatis</p>
-                            <p class="text-sm text-slate-500">Kirim pengingat jika undangan belum diterima setelah 3 hari.</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
         </div>
 
         <div class="space-y-6">

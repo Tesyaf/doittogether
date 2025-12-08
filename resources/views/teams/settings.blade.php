@@ -100,67 +100,9 @@
                 </div>
             </form>
 
-            <div class="bg-white/5 border border-white/10 rounded-2xl shadow p-6 space-y-4 backdrop-blur-sm">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-slate-300">Preferensi</p>
-                        <h2 class="text-xl font-semibold text-white">Notifikasi & Keamanan</h2>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded-full bg-cyan-500/20 text-cyan-100 border border-cyan-400/30">Preview</span>
-                </div>
-
-                <div class="space-y-4">
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-500 text-cyan-600 focus:ring-cyan-500" checked>
-                        <div>
-                            <p class="text-sm font-semibold text-white">Email ringkasan mingguan</p>
-                            <p class="text-sm text-slate-400">Kirim laporan progres ke anggota setiap Senin.</p>
-                        </div>
-                    </label>
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-500 text-cyan-600 focus:ring-cyan-500" checked>
-                        <div>
-                            <p class="text-sm font-semibold text-white">Persetujuan anggota baru</p>
-                            <p class="text-sm text-slate-400">Admin harus menyetujui undangan sebelum aktif.</p>
-                        </div>
-                    </label>
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-500 text-cyan-600 focus:ring-cyan-500">
-                        <div>
-                            <p class="text-sm font-semibold text-white">Aktifkan 2FA untuk admin</p>
-                            <p class="text-sm text-slate-400">Wajibkan autentikasi dua faktor bagi role admin.</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
         </div>
 
         <div class="space-y-6">
-            <div class="bg-slate-900 text-slate-50 rounded-2xl shadow p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-cyan-200/80">Peran & akses</p>
-                        <h2 class="text-xl font-semibold">Role Settings</h2>
-                    </div>
-                    <span class="text-xs px-2 py-1 rounded-full bg-white/10 text-white">Admin/Member</span>
-                </div>
-                <div class="space-y-3">
-                    @foreach ([
-                        ['role' => 'Owner', 'desc' => 'Full akses termasuk hapus tim'],
-                        ['role' => 'Admin', 'desc' => 'Kelola anggota, undangan, dan data tim'],
-                        ['role' => 'Member', 'desc' => 'Akses tugas dan kolaborasi']
-                    ] as $item)
-                    <div class="p-3 rounded-xl border border-slate-800 bg-slate-800/60">
-                        <p class="text-sm font-semibold">{{ $item['role'] }}</p>
-                        <p class="text-xs text-slate-300">{{ $item['desc'] }}</p>
-                    </div>
-                    @endforeach
-                </div>
-                <button class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
-                    Tambah role baru
-                </button>
-            </div>
-
             <div class="bg-white/5 border border-white/10 rounded-2xl shadow p-6 space-y-4 backdrop-blur-sm">
                 <div class="flex items-center justify-between">
                     <div>

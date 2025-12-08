@@ -1,6 +1,25 @@
 @extends('layouts.team-app')
 
 @section('content')
+@php
+    use Illuminate\Support\Str;
+
+    $activities = $logs
+        ->flatMap(function ($member) {
+            return $member->activityLogs->map(function ($log) use ($member) {
+                $log->actor_name = $member->user->name ?? 'Unknown';
+                $log->actor_initials = strtoupper(Str::limit($log->actor_name, 2, ''));
+                return $log;
+            });
+        })
+        ->sortByDesc('created_at')
+        ->values();
+
+    $todayCount    = $activities->filter(fn ($log) => $log->created_at?->isToday())->count();
+    $taskCount     = $activities->where('entity_type', 'task')->count();
+    $uniqueActors  = $activities->pluck('actor_name')->filter()->unique()->count();
+@endphp
+
 <div class="w-full max-w-6xl mx-auto px-4 space-y-8">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -21,23 +40,23 @@
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
                 <p class="text-sm text-slate-500">Aktivitas Hari Ini</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">38</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $todayCount }}</p>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-cyan-100 text-cyan-700">+12 vs kemarin</span>
+            <span class="text-xs px-2 py-1 rounded-full bg-cyan-100 text-cyan-700">Real-time</span>
         </div>
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
-                <p class="text-sm text-slate-500">Aksi Kritis</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">5</p>
+                <p class="text-sm text-slate-500">Aksi Task</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $taskCount }}</p>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-orange-100 text-orange-700">Perlu cek</span>
+            <span class="text-xs px-2 py-1 rounded-full bg-cyan-100 text-cyan-700">Task</span>
         </div>
         <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow flex items-center justify-between">
             <div>
-                <p class="text-sm text-slate-500">Filter Aktif</p>
-                <p class="text-3xl font-semibold text-slate-900 dark:text-white">2</p>
+                <p class="text-sm text-slate-500">Anggota Aktif</p>
+                <p class="text-3xl font-semibold text-slate-900 dark:text-white">{{ $uniqueActors }}</p>
             </div>
-            <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-700">User, Rentang</span>
+            <span class="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-700">Pengguna</span>
         </div>
     </div>
 
@@ -75,50 +94,46 @@
                         <th class="px-4 py-3">Aktivitas</th>
                         <th class="px-4 py-3">Kategori</th>
                         <th class="px-4 py-3">Waktu</th>
-                        <th class="px-4 py-3 text-right">Status</th>
+                        <th class="px-4 py-3 text-right">Info</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 bg-white dark:bg-slate-900/40">
-                    @foreach ([
-                    ['name' => 'Aulia Rahma', 'action' => 'Mengubah role Dimas menjadi Editor', 'category' => 'Role', 'time' => '5 menit lalu', 'status' => 'Berhasil'],
-                    ['name' => 'Rafi Pratama', 'action' => 'Menghapus task "Integrasi Midtrans"', 'category' => 'Task', 'time' => '20 menit lalu', 'status' => 'Berhasil'],
-                    ['name' => 'Nadya Putri', 'action' => 'Meng-update logo tim', 'category' => 'Branding', 'time' => '1 jam lalu', 'status' => 'Berhasil'],
-                    ['name' => 'Dimas Saputra', 'action' => 'Percobaan login gagal 3x', 'category' => 'Keamanan', 'time' => '3 jam lalu', 'status' => 'Dipantau'],
-                    ['name' => 'System', 'action' => 'Undangan ke lisa@doit.id kadaluwarsa', 'category' => 'Undangan', 'time' => 'Kemarin', 'status' => 'Kadaluarsa'],
-                    ] as $item)
-                    <tr>
-                        <td class="px-4 py-3">
-                            <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-semibold">
-                                    {{ strtoupper(substr($item['name'], 0, 2)) }}
+                    @forelse ($activities as $log)
+                        @php
+                            $meta = $log->meta ? json_decode($log->meta, true) : null;
+                            $metaText = is_array($meta) ? implode(', ', array_map(fn($k, $v) => $k . ': ' . $v, array_keys($meta), $meta)) : ($log->meta ?? '—');
+                        @endphp
+                        <tr>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-semibold">
+                                        {{ $log->actor_initials ?? 'NA' }}
+                                    </div>
+                                    <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $log->actor_name ?? 'Unknown' }}</p>
                                 </div>
-                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ $item['name'] }}</p>
-                            </div>
-                        </td>
-                        <td class="px-4 py-3 text-sm text-slate-800 dark:text-slate-100">{{ $item['action'] }}</td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
-                                @switch($item['category'])
-                                    @case('Role') bg-blue-100 text-blue-700 @break
-                                    @case('Task') bg-cyan-100 text-cyan-700 @break
-                                    @case('Branding') bg-indigo-100 text-indigo-700 @break
-                                    @case('Keamanan') bg-orange-100 text-orange-700 @break
-                                    @default bg-slate-100 text-slate-700
-                                @endswitch">
-                                {{ $item['category'] }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-sm text-slate-500">{{ $item['time'] }}</td>
-                        <td class="px-4 py-3 text-right">
-                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold
-                                @if($item['status'] === 'Berhasil') bg-emerald-100 text-emerald-700
-                                @elseif($item['status'] === 'Dipantau') bg-amber-100 text-amber-700
-                                @else bg-red-100 text-red-700 @endif">
-                                {{ $item['status'] }}
-                            </span>
-                        </td>
-                    </tr>
-                    @endforeach
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-800 dark:text-slate-100">
+                                {{ ucfirst($log->action) }} {{ $log->entity_type }}
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+                                    {{ $log->entity_type }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-sm text-slate-500">
+                                {{ $log->created_at?->diffForHumans() ?? '-' }}
+                            </td>
+                            <td class="px-4 py-3 text-right text-xs text-slate-500">
+                                {{ Str::limit($metaText, 50) }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-sm text-slate-500">
+                                Belum ada aktivitas untuk tim ini.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

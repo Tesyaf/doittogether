@@ -7,8 +7,11 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
     }
 
+    .calendar-nav { display: flex; gap: 0.25rem; flex-wrap: wrap; }
     .calendar-nav button {
         background: transparent;
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -19,13 +22,9 @@
         transition: all 0.2s;
     }
 
-    .calendar-nav button:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
+    .calendar-nav button:hover { background: rgba(255, 255, 255, 0.1); }
 
-    .calendar {
-        width: 100%;
-    }
+    .calendar { width: 100%; }
 
     .calendar-grid {
         display: grid;
@@ -81,7 +80,7 @@
     }
 </style>
 
-<div class="w-full max-w-6xl mx-auto px-4 space-y-8">
+<div class="w-full max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
     <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <p class="text-sm text-slate-500">Ringkasan aktivitas tim</p>
@@ -97,7 +96,7 @@
         </div>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-4">
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div class="col-span-2 md:col-span-1 bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow">
             <p class="text-sm text-slate-500">Total Task</p>
             <div class="flex items-end justify-between mt-2">
@@ -206,10 +205,10 @@
                     <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Timeline</h2>
                 </div>
 
-                <div class="calendar bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+                <div class="calendar bg-slate-50 dark:bg-slate-900/40 p-4 rounded-xl border border-slate-100 dark:border-slate-800 overflow-x-auto">
                     <div class="calendar-header">
                         <h3 class="text-sm font-semibold text-slate-900 dark:text-white" id="calendar-title">November 2025</h3>
-                        <div class="calendar-nav flex gap-1">
+                        <div class="calendar-nav">
                             <button onclick="previousMonth()" class="px-2 py-1 text-sm">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>

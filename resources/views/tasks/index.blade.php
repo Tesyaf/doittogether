@@ -18,29 +18,29 @@
     }
 </style>
 
-<div class="max-w-7xl mx-auto space-y-6">
+<div class="max-w-7xl mx-auto space-y-6 px-4 sm:px-6">
     {{-- Header --}}
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <p class="text-sm text-white/60">{{ $team->name }}</p>
             <h1 class="text-3xl font-bold text-white">Tasks</h1>
         </div>
         <a href="{{ route('tasks.create', $team->id) }}"
-            class="inline-flex items-center px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 transition text-white font-semibold">
+            class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 transition text-white font-semibold w-full sm:w-auto">
             <i class="fa-solid fa-plus mr-2"></i> Buat Task
         </a>
     </div>
 
     {{-- Filter & Search --}}
-    <div class="flex flex-col md:flex-row gap-4 bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
-        <input type="search" placeholder="Cari task..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-white/50">
+    <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4 bg-white/5 border border-white/10 rounded-xl p-4 backdrop-blur-sm">
+        <input type="search" placeholder="Cari task..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-white/50">
 
-        <select class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('assigned_to_me', this.value)">
+        <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('assigned_to_me', this.value)">
             <option value="">Semua Tugas</option>
             <option value="1" {{ request('assigned_to_me') == 1 ? 'selected' : '' }}>Tugas Saya</option>
         </select>
 
-        <select class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('member_id', this.value)">
+        <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('member_id', this.value)">
             <option value="">Semua Anggota</option>
             @foreach($team_members as $member)
             <option value="{{ $member->id_member }}" {{ request('member_id') == $member->id_member ? 'selected' : '' }}>
@@ -49,14 +49,14 @@
             @endforeach
         </select>
 
-        <select class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('category_id', this.value)">
+        <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('category_id', this.value)">
             <option value="">Semua Kategori</option>
             @foreach($categories as $category)
             <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
             @endforeach
         </select>
 
-        <select class="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('status', this.value)">
+        <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white" onchange="filterTasks('status', this.value)">
             <option value="">Semua Status</option>
             <option value="todo" {{ request('status') == 'todo' ? 'selected' : '' }}>To Do</option>
             <option value="in_progress" {{ request('status') == 'in_progress' ? 'selected' : '' }}>In Progress</option>

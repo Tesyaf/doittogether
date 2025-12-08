@@ -9,7 +9,7 @@
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="bg-[#0f172a] text-white flex items-center justify-center min-h-screen font-inter antialiased">
+<body class="bg-[#0f172a] text-white flex items-center justify-center min-h-screen font-inter antialiased px-4 sm:px-6 py-6">
   @include('layouts.partials.loading-overlay', ['variant' => 'auth'])
   <div class="max-w-5xl w-full mx-auto flex flex-col md:flex-row bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl">
 
@@ -40,7 +40,7 @@
 </div>
 
 
-    <div class="w-full md:w-1/2 p-8 md:p-10">
+    <div class="w-full md:w-1/2 p-6 sm:p-8 md:p-10">
       @yield('content')
     </div>
 

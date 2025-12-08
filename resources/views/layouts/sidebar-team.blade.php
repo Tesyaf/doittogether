@@ -5,7 +5,11 @@
         open_team: false,
         open_settings: false
     }"
-    class="w-64 bg-[#0b1120] border-r border-white/10 py-5 px-4 hidden md:flex md:fixed md:left-20 md:top-0 md:bottom-0 md:flex-col md:z-40">
+    class="w-64 bg-[#0b1120] border-r border-white/10 py-5 px-4 fixed left-20 top-0 bottom-0 flex flex-col z-40
+           transform transition-transform duration-200 ease-out
+           md:translate-x-0"
+    x-show="sidebarOpen || window.innerWidth >= 768"
+    :class="{ '-translate-x-full': !sidebarOpen && window.innerWidth < 768, 'translate-x-0': sidebarOpen || window.innerWidth >= 768 }">
 
     {{-- Header Team --}}
     <div>

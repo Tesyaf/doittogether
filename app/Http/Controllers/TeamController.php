@@ -6,6 +6,7 @@ use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\TeamInvitation;
 use App\Models\ActivityLog;
+use App\Models\Category;
 use App\Mail\TeamInvitationMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,6 +51,17 @@ class TeamController extends Controller
             'role' => 'owner',
             'joined_at' => now(),
         ]);
+
+        $defaultCategories = ['Umum', 'Bug', 'Feature', 'Improvement'];
+        Category::insert(
+            collect($defaultCategories)->map(function ($name) use ($team) {
+                return [
+                    'team_id' => $team->id,
+                    'name' => $name,
+                    'created_at' => now(),
+                ];
+            })->all()
+        );
 
         session(['team_id' => $team->id]);
 
@@ -261,6 +273,31 @@ class TeamController extends Controller
         $team->update($data);
 
         return back()->with('success', 'Pengaturan tim diperbarui.');
+    }
+
+    public function leave(Team $team)
+    {
+        $user = Auth::user();
+
+        // Pastikan masih member
+        $member = $team->members()->where('user_id', $user->id)->first();
+        abort_unless($member, 403);
+
+        // Cegah owner tunggal keluar
+        $ownerCount = $team->members()->where('role', 'owner')->count();
+        if ($member->role === 'owner' && $ownerCount <= 1) {
+            return back()->withErrors(['leave' => 'Tidak bisa keluar karena kamu satu-satunya owner.']);
+        }
+
+        $member->delete();
+
+        // Jika session menunjuk ke tim ini, hapus atau pindah
+        if (session('team_id') === $team->id) {
+            $otherTeam = $user->teams()->where('teams.id', '!=', $team->id)->first();
+            session(['team_id' => $otherTeam?->id]);
+        }
+
+        return redirect()->route('dashboard')->with('success', 'Berhasil keluar dari tim.');
     }
 
     private function ensureMember(Team $team)

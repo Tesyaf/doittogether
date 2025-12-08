@@ -1,5 +1,8 @@
-<aside class="hidden md:flex md:fixed md:top-0 md:left-0 w-20 bg-[#020617] border-r border-white/10 min-h-screen flex
-              flex-col items-center py-4 gap-4 z-50">
+<aside class="fixed top-0 left-0 w-20 bg-[#020617] border-r border-white/10 min-h-screen flex
+              flex-col items-center py-4 gap-4 z-50 transform transition-transform duration-200 ease-out
+              md:translate-x-0"
+       x-show="sidebarOpen || window.innerWidth >= 768"
+       :class="{ '-translate-x-full': !sidebarOpen && window.innerWidth < 768, 'translate-x-0': sidebarOpen || window.innerWidth >= 768 }">
 
     {{-- Logo --}}
     <a href="{{ route('dashboard') }}"

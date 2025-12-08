@@ -71,7 +71,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800">
+                <div class="overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 hidden md:block">
                     <table class="min-w-full divide-y divide-slate-100 dark:divide-slate-800">
                         <thead class="bg-slate-50 dark:bg-slate-900/50">
                             <tr class="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
@@ -135,36 +135,57 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="grid gap-3 md:hidden">
+                    @forelse ($pending as $invite)
+                        @php
+                            $expiryBadge = 'bg-slate-100 text-slate-700';
+                            $expiryLabel = 'Tidak diatur';
+                            if ($invite->expires_at) {
+                                $expiryLabel = $invite->expires_at->isPast() ? 'Habis' : $invite->expires_at->diffForHumans();
+                                if ($invite->expires_at->isPast()) {
+                                    $expiryBadge = 'bg-red-100 text-red-700';
+                                } elseif ($invite->expires_at->lte(now()->addDays(3))) {
+                                    $expiryBadge = 'bg-orange-100 text-orange-700';
+                                } else {
+                                    $expiryBadge = 'bg-emerald-100 text-emerald-700';
+                                }
+                            }
+                        @endphp
+                        <div class="p-4 rounded-xl bg-white/5 border border-white/10 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-semibold text-white">{{ $invite->email }}</p>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-cyan-100 text-cyan-700">
+                                    {{ $invite->role }}
+                                </span>
+                            </div>
+                            <div class="text-xs text-white/60 flex items-center justify-between">
+                                <span>Dikirim: {{ optional($invite->created_at)->diffForHumans() }}</span>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold {{ $expiryBadge }}">
+                                    {{ $expiryLabel }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <form method="POST" action="{{ route('teams.invitations.resend', [$team, $invite]) }}">
+                                    @csrf
+                                    <button class="text-sm text-cyan-300 hover:text-cyan-200">Resend</button>
+                                </form>
+                                <form method="POST" action="{{ route('teams.invitations.cancel', [$team, $invite]) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-sm text-red-300 hover:text-red-200">Batalkan</button>
+                                </form>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="p-4 rounded-xl bg-white/5 border border-white/10 text-sm text-white/70 text-center">
+                            Belum ada undangan pending.
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
 
         <div class="space-y-6">
-            <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl shadow p-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-slate-500">Template</p>
-                        <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Pengingat & Email</h2>
-                    </div>
-                    <button class="text-sm text-cyan-600 hover:text-cyan-700">Kelola</button>
-                </div>
-                <div class="space-y-3">
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500" checked>
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Remind otomatis</p>
-                            <p class="text-sm text-slate-500">Kirim pengingat setelah 3 hari jika belum diterima.</p>
-                        </div>
-                    </label>
-                    <label class="flex items-start gap-3">
-                        <input type="checkbox" class="mt-1 h-4 w-4 rounded border-slate-300 text-cyan-600 focus:ring-cyan-500">
-                        <div>
-                            <p class="text-sm font-semibold text-slate-900 dark:text-white">Kirim salinan ke admin</p>
-                            <p class="text-sm text-slate-500">CC admin pada setiap pengingat undangan.</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
-
             <div class="bg-slate-900 text-slate-50 rounded-2xl shadow p-6 space-y-4">
                 <div class="flex items-center justify-between">
                     <div>

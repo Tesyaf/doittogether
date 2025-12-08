@@ -1,7 +1,7 @@
 @extends('layouts.team-app')
 
 @section('content')
-<div class="max-w-2xl mx-auto">
+<div class="max-w-3xl mx-auto px-4 sm:px-6">
     <div class="mb-6">
         <a href="{{ route('teams.dashboard', $team->id) }}" class="text-cyan-400 hover:text-cyan-300 text-sm mb-3 inline-flex items-center gap-1">
             <i class="fa-solid fa-arrow-left"></i> Kembali
@@ -22,7 +22,7 @@
             @enderror
         </div>
 
-        <div class="flex gap-3 pt-4">
+        <div class="flex flex-col sm:flex-row gap-3 pt-4">
             <button type="submit" class="flex-1 px-6 py-3 rounded-lg bg-cyan-500 hover:bg-cyan-600 transition text-white font-semibold">
                 <i class="fa-solid fa-check mr-2"></i> Buat Kategori
             </button>

@@ -1,7 +1,7 @@
 @extends('layouts.team-app')
 
 @section('content')
-<div class="max-w-5xl mx-auto space-y-6">
+<div class="max-w-5xl mx-auto space-y-6 px-4 sm:px-6">
     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
             <a href="{{ route('teams.dashboard', $team->id) }}" class="text-cyan-400 hover:text-cyan-300 text-sm inline-flex items-center gap-2">
@@ -11,7 +11,7 @@
             <p class="text-sm text-white/60">Hanya owner (atau admin aplikasi) yang dapat membuat, mengubah, dan menghapus kategori.</p>
         </div>
         <a href="{{ route('categories.create', $team->id) }}"
-            class="inline-flex items-center px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 transition text-white font-semibold shadow">
+            class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 transition text-white font-semibold shadow w-full md:w-auto">
             <i class="fa-solid fa-plus mr-2"></i> Tambah Kategori
         </a>
     </div>
@@ -36,7 +36,7 @@
         @else
         <div class="space-y-3">
             @foreach ($categoryList as $category)
-            <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-white/5 border border-white/10">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 rounded-xl bg-white/5 border border-white/10">
                 <div>
                     <p class="text-white font-semibold">{{ $category->name }}</p>
                     <p class="text-xs text-white/60">{{ $category->tasks_count }} task terkait</p>

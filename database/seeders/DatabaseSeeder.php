@@ -9,13 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,
-            TeamSeeder::class,
-            TaskSeeder::class,
-            NotificationSeeder::class,
             AdminUserSeeder::class,
-            MasterTaskStatusSeeder::class,
-            MasterTaskPrioritySeeder::class,
         ]);
     }
 }
