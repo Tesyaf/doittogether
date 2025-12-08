@@ -42,4 +42,7 @@ return [
         'install_url' => env('GITHUB_APP_INSTALL_URL'),
         'webhook_secret' => env('GITHUB_APP_WEBHOOK_SECRET'),
     ],
+    'resend' => [
+        'key' => env('RESEND_KEY'),
+    ],
 ];
