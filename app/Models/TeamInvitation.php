@@ -20,7 +20,6 @@ class TeamInvitation extends Model
 
     protected $casts = [
         'email' => 'encrypted',
-        'code' => 'encrypted',
         'expires_at' => 'datetime',
         'created_at' => 'datetime',
     ];
