@@ -132,15 +132,7 @@ class CalendarIntegrationController extends Controller
         $errors = 0;
 
         foreach ($tasks as $task) {
-            $rawEventId = 'task_' . $task->id;
-            $eventId = substr(preg_replace('/[^A-Za-z0-9_]/', '', $rawEventId), 0, 1024);
-            if (strlen($eventId) < 5) {
-                try {
-                    $eventId = 'task_' . bin2hex(random_bytes(8));
-                } catch (Throwable $e) {
-                    $eventId = 'task_' . uniqid();
-                }
-            }
+            $eventId = 'task-' . md5($task->id);
             $event = new Google_Service_Calendar_Event([
                 'id' => $eventId,
                 'summary' => $task->title,
@@ -166,15 +158,15 @@ class CalendarIntegrationController extends Controller
                         Log::debug('Google Calendar sync: Event updated', ['user_id' => $user->id, 'task_id' => $task->id]);
                         $synced++;
                     } catch (Throwable $updateErr) {
-                        Log::error('Google Calendar sync: Event update failed', ['user_id' => $user->id, 'task_id' => $task->id, 'error' => $updateErr->getMessage()]);
+                        Log::error('Google Calendar sync: Event update failed', ['user_id' => $user->id, 'task_id' => $task->id, 'event_id' => $eventId, 'error' => $updateErr->getMessage()]);
                         $errors++;
                     }
                 } else {
-                    Log::error('Google Calendar sync: Service exception', ['user_id' => $user->id, 'task_id' => $task->id, 'code' => $e->getCode(), 'error' => $e->getMessage()]);
+                    Log::error('Google Calendar sync: Service exception', ['user_id' => $user->id, 'task_id' => $task->id, 'event_id' => $eventId, 'code' => $e->getCode(), 'error' => $e->getMessage()]);
                     $errors++;
                 }
             } catch (Throwable $e) {
-                Log::error('Google Calendar sync: General exception', ['user_id' => $user->id, 'task_id' => $task->id, 'error' => $e->getMessage()]);
+                Log::error('Google Calendar sync: General exception', ['user_id' => $user->id, 'task_id' => $task->id, 'event_id' => $eventId, 'error' => $e->getMessage()]);
                 $errors++;
             }
         }
