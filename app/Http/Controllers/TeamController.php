@@ -82,6 +82,76 @@ class TeamController extends Controller
         return redirect()->route('teams.dashboard', $id);
     }
 
+    public function showJoinForm(Request $request)
+    {
+        return view('teams.join', ['prefillCode' => $request->query('code')]);
+    }
+
+    public function joinByCode(Request $request)
+    {
+        $data = $request->validate([
+            'code' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        $invitation = TeamInvitation::with('team')
+            ->where('code', $data['code'])
+            ->first();
+
+        if (!$invitation) {
+            return back()->withErrors(['code' => 'Kode undangan tidak ditemukan.'])->withInput();
+        }
+
+        if ($invitation->expires_at && $invitation->expires_at->isPast()) {
+            $invitation->status = 'expired';
+            $invitation->save();
+
+            return back()->withErrors(['code' => 'Kode undangan sudah kedaluwarsa.']);
+        }
+
+        if ($invitation->status !== 'pending') {
+            return back()->withErrors(['code' => 'Kode undangan sudah tidak aktif.'])->withInput();
+        }
+
+        if (strtolower($invitation->email) !== strtolower($user->email)) {
+            return back()->withErrors(['code' => 'Kode ini tidak ditujukan untuk email Anda.'])->withInput();
+        }
+
+        $team = $invitation->team;
+
+        if (!$team) {
+            return back()->withErrors(['code' => 'Tim untuk undangan ini tidak ditemukan.']);
+        }
+
+        $existingMember = $team->members()->where('user_id', $user->id)->first();
+
+        if ($existingMember) {
+            $invitation->status = 'accepted';
+            $invitation->save();
+
+            session(['team_id' => $team->id]);
+
+            return redirect()->route('teams.dashboard', $team->id)
+                ->with('success', 'Kamu sudah tergabung di tim ini.');
+        }
+
+        TeamMember::create([
+            'team_id' => $team->id,
+            'user_id' => $user->id,
+            'role' => $invitation->role ?? 'member',
+            'joined_at' => now(),
+        ]);
+
+        $invitation->status = 'accepted';
+        $invitation->save();
+
+        session(['team_id' => $team->id]);
+
+        return redirect()->route('teams.dashboard', $team->id)
+            ->with('success', 'Selamat! Kamu berhasil bergabung ke tim.');
+    }
+
     public function dashboard(Team $team)
     {
         $this->ensureMember($team);

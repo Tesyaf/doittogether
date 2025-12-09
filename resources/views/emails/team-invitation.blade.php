@@ -49,6 +49,16 @@
                                         </a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td style="height:8px;"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('/teams/join?code=' . $invitation->code) }}" style="background:#0ea5e9;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:10px;font-weight:600;font-size:15px;display:inline-block;">
+                                            Buka Halaman Join
+                                        </a>
+                                    </td>
+                                </tr>
                             </table>
 
                             <p style="margin:20px 0 0;font-size:13px;color:#64748b;line-height:1.5;">

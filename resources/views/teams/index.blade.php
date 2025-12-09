@@ -8,9 +8,14 @@
             <h1 class="text-2xl md:text-3xl font-semibold text-white">Tim Kamu</h1>
             <p class="text-sm text-slate-400 mt-1">Pilih tim untuk membuka dashboard, anggota, atau pengaturan.</p>
         </div>
-        <a href="{{ route('teams.create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
-            <i class="fa-solid fa-plus mr-2"></i> Buat Tim Baru
-        </a>
+        <div class="flex flex-col sm:flex-row gap-3">
+            <a href="{{ route('teams.join') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-white/5 border border-white/15 text-white font-semibold hover:bg-white/10 transition">
+                <i class="fa-solid fa-link mr-2"></i> Masukkan Kode Undangan
+            </a>
+            <a href="{{ route('teams.create') }}" class="inline-flex items-center px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold shadow hover:from-cyan-600 hover:to-blue-700 transition">
+                <i class="fa-solid fa-plus mr-2"></i> Buat Tim Baru
+            </a>
+        </div>
     </div>
     <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 text-slate-200 hover:text-cyan-200 text-sm">
         <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard
@@ -21,9 +26,14 @@
             <i class="fa-solid fa-users-slash text-4xl text-white/40 mb-4"></i>
             <h2 class="text-2xl font-semibold mb-2 text-white">Belum Ada Tim</h2>
             <p class="text-white/60 mb-6">Mulai dengan membuat tim baru atau minta undangan dari rekan.</p>
-            <a href="{{ route('teams.create') }}" class="px-5 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-xl font-semibold text-white shadow-lg">
-                <i class="fa-solid fa-plus mr-2"></i> Buat Tim Baru
-            </a>
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                <a href="{{ route('teams.join') }}" class="px-5 py-3 bg-white/10 hover:bg-white/15 rounded-xl font-semibold text-white border border-white/10">
+                    <i class="fa-solid fa-link mr-2"></i> Masukkan Kode Undangan
+                </a>
+                <a href="{{ route('teams.create') }}" class="px-5 py-3 bg-cyan-500 hover:bg-cyan-600 rounded-xl font-semibold text-white shadow-lg">
+                    <i class="fa-solid fa-plus mr-2"></i> Buat Tim Baru
+                </a>
+            </div>
         </div>
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

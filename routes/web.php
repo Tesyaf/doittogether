@@ -69,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/calendar/sync', [CalendarIntegrationController::class, 'sync'])->name('calendar.sync');
 
     Route::middleware('verified_or_admin')->group(function () {
+        Route::get('/teams/join', [TeamController::class, 'showJoinForm'])->name('teams.join');
+        Route::post('/teams/join', [TeamController::class, 'joinByCode'])->name('teams.join.submit');
+
         Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
         Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
         Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
