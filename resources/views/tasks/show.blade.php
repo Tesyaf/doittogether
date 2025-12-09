@@ -159,7 +159,7 @@
                                 <p class="text-sm font-semibold text-white">{{ $assignee->user->name }}</p>
                             </div>
                         </div>
-                        <form method="POST" action="{{ route('tasks.assignees.destroy', ['team' => $team->id, 'task' => $task->id, 'assignee' => $assignee->id_member]) }}" class="inline" onsubmit="return confirm('Hapus assignee ini?')">
+                        <form method="POST" action="{{ route('tasks.assignees.destroy', ['team' => $team->id, 'task' => $task->id, 'memberId' => $assignee->id_member]) }}" class="inline" onsubmit="return confirm('Hapus assignee ini?')">
                             @csrf @method('DELETE')
                             <button type="submit" class="text-red-400 hover:text-red-300">
                                 <i class="fa-solid fa-trash"></i>

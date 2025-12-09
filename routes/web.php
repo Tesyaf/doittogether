@@ -41,28 +41,22 @@ Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.l
 Route::get('auth/google/callback', [GoogleController::class, 'callback']);
 
 Route::middleware(['auth'])->group(function () {
-    // Dashboard pengguna (global)
     Route::get('/dashboard', [UserDashboardController::class, 'index'])
         ->middleware('verified_or_admin')
         ->name('dashboard');
 
-    // SHOW PROFILE
     Route::get('/profile', [ProfileController::class, 'show'])
         ->name('profile.show');
 
-    // EDIT PROFILE PAGE
     Route::get('/profile/edit', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
-    // UPDATE PROFILE
     Route::put('/profile/update', [ProfileController::class, 'update'])
         ->name('profile.update');
 
-    // UPDATE PASSWORD
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])
         ->name('profile.password');
 
-    // Google Calendar integration (API)
     Route::get('/calendar/connect', [CalendarIntegrationController::class, 'redirect'])->name('calendar.connect');
     Route::get('/calendar/connect/callback', [CalendarIntegrationController::class, 'callback'])->name('calendar.callback');
     Route::post('/calendar/disconnect', [CalendarIntegrationController::class, 'disconnect'])->name('calendar.disconnect');
@@ -100,7 +94,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/teams/{team}/repo', [TeamRepositoryController::class, 'disconnect'])->name('repositories.disconnect');
         Route::get('/teams/{team}/commits', [TeamRepositoryController::class, 'commits'])->name('repositories.commits');
 
-        // TASK ROUTES (nested dalam team)
         Route::get('/teams/{team}/tasks', [TaskController::class, 'index'])->name('tasks.index');
         Route::get('/teams/{team}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
         Route::post('/teams/{team}/tasks', [TaskController::class, 'store'])->name('tasks.store');
@@ -109,18 +102,14 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/teams/{team}/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
         Route::delete('/teams/{team}/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-        // TASK COMMENTS
         Route::post('/teams/{team}/tasks/{task}/comments', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
 
-        // TASK ATTACHMENTS
         Route::post('/teams/{team}/tasks/{task}/attachments', [TaskAttachmentController::class, 'store'])->name('tasks.attachments.store');
         Route::delete('/teams/{team}/tasks/{task}/attachments/{attachment}', [TaskAttachmentController::class, 'destroy'])->name('tasks.attachments.destroy');
 
-        // TASK ASSIGNEES
         Route::post('/teams/{team}/tasks/{task}/assignees', [TaskAssigneeController::class, 'store'])->name('tasks.assignees.store');
         Route::delete('/teams/{team}/tasks/{task}/assignees/{memberId}', [TaskAssigneeController::class, 'destroy'])->name('tasks.assignees.destroy');
 
-        // CATEGORY ROUTES
         Route::get('/teams/{team}/categories', [CategoryController::class, 'index'])->name('categories.index');
         Route::get('/teams/{team}/categories/create', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/teams/{team}/categories', [CategoryController::class, 'store'])->name('categories.store');

@@ -132,7 +132,15 @@ class CalendarIntegrationController extends Controller
         $errors = 0;
 
         foreach ($tasks as $task) {
-            $eventId = 'task-' . $task->id;
+            $rawEventId = 'task_' . $task->id;
+            $eventId = substr(preg_replace('/[^A-Za-z0-9_]/', '', $rawEventId), 0, 1024);
+            if (strlen($eventId) < 5) {
+                try {
+                    $eventId = 'task_' . bin2hex(random_bytes(8));
+                } catch (Throwable $e) {
+                    $eventId = 'task_' . uniqid();
+                }
+            }
             $event = new Google_Service_Calendar_Event([
                 'id' => $eventId,
                 'summary' => $task->title,
