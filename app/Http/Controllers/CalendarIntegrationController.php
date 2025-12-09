@@ -132,7 +132,12 @@ class CalendarIntegrationController extends Controller
         $errors = 0;
 
         foreach ($tasks as $task) {
-            $eventId = 'task-' . md5($task->id);
+            // Google event IDs must be 5-1024 chars with only letters, digits, underscore, or hyphen.
+            // Use a deterministic, lowercase, alphanumeric ID to avoid API rejection.
+            $eventId = 'task' . strtolower(preg_replace('/[^a-z0-9]/i', '', $task->id));
+            if (strlen($eventId) < 5) {
+                $eventId .= substr(md5($task->id), 0, 8);
+            }
             $event = new Google_Service_Calendar_Event([
                 'id' => $eventId,
                 'summary' => $task->title,
