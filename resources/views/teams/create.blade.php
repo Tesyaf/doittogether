@@ -1,4 +1,5 @@
 @extends('layouts.user-app')
+@section('userSidebar', true)
 
 @section('content')
 

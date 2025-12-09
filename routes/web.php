@@ -30,9 +30,9 @@ use App\Http\Controllers\CalendarIntegrationController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome')->name('landing');
+Route::view('/about', 'about')->name('about');
+Route::view('/manfaat', 'manfaat')->name('manfaat');
 
 Route::post('/webhooks/github/app', [GitHubWebhookController::class, 'handleApp'])->name('webhooks.github.app');
 Route::post('/webhooks/github/{teamRepository}', [GitHubWebhookController::class, 'handle'])->name('webhooks.github');

@@ -46,6 +46,14 @@
                         <span class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</span>
                         <input type="email" name="email" value="{{ old('email') }}" required placeholder="email@doit.id" class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-4 py-2.5 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-cyan-500 focus:border-blue-500 transition">
                     </label>
+                    <div class="space-y-2">
+                        <p class="block text-sm font-medium text-slate-700 dark:text-slate-200">Peran</p>
+                        <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950/70 px-4 py-2.5 text-slate-700 dark:text-slate-200 text-sm">
+                            Member (default)
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Undangan otomatis sebagai member. Role admin hanya untuk owner.</p>
+                        <input type="hidden" name="role" value="member">
+                    </div>
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">

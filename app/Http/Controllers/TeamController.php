@@ -142,10 +142,14 @@ class TeamController extends Controller
     {
         $this->ensureOwnerOrAdmin($team);
 
+        $request->merge(['role' => 'member']); // Undangan hanya untuk member
+
         $data = $request->validate([
             'email' => 'required|email',
-            'role' => 'required|in:member,admin',
+            'role' => 'in:member',
             'expires_at' => 'nullable|date|after:today',
+        ], [
+            'role.in' => 'Peran undangan hanya member.',
         ]);
 
         $currentMember = $team->members()->where('user_id', Auth::id())->firstOrFail();
