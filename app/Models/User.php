@@ -33,6 +33,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'google_calendar_token_expires_at' => 'datetime',
+    ];
+
     // RELATIONS
     public function teams()
     {
